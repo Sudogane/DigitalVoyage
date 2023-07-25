@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digimon Voyage | Digibank</title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digimon Voyage is a brand-new browser game inspired by the Digimon Series, Join-us and start your brand new Digital Adventure right now, the Digital World calls for you, Digidestined!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digimon.Voyage: Season One">
+  <meta property="og:title" content="Digimon Voyage - A Brand new Digimon Browser-RPG">
+  <meta property="og:description" content="A Brand new Digimon Browser Game, Join-us today and start your Digital Adventure as an Digidestined!">
+  <meta property="og:image" content="https://i.pinimg.com/originals/72/e8/60/72e86064ed10bf33500599d00e2aae08.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body>
+	<!-- NAVIGATION WRAP -->
+	<%- include('../../partials/navbar') %>
+	<!-- /NAVIGATION WRAP -->
+    
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+
+    <!-- Mobile User Banner-->
+    <%- include("../../partials/tamer/banner")%>
+    <!-- Mobile User Banner-->
+      
+		<!-- LIVE NEWS WIDGET WRAP -->
+		<%- include("../../partials/livenews") %>
+			<!-- /LIVE NEWS WIDGET WRAP -->
+
+			<!-- LAYOUT CONTENT FULL -->
+			<div class="layout-content-1 layout-item-3-1 grid-limit">
+				<!-- LAYOUT BODY -->
+				<div class="layout-body layout-item layout-item-body">
+					<!-- WIDGET ITEM -->
+					<div class="widget-item">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap blue">
+							<h2 class="section-title medium layout-item-title"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_digibank.png?v=1665508150671">  Evolutions
+                <span style="float: right; margin-right: 16px; margin-top: 2%;"><%- evolutions.length %> Registered</span>
+              </h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->
+					</div>
+					<!-- /WIDGET ITEM -->
+              
+        <!-- LAYOUT ITEM -->
+        <div class="layout-item centered">
+          <div class="grid-4col_1" style="margin-left: 95px; margin-bottom: 32px;">
+
+            <% evolutions.sort((a, b) => a.id - b.id).forEach((digimon) => { %>
+                      <!-- DIGIMON PREVIEW -->
+                      <div class="product-preview small" style="text-align:center;">
+                        <!-- DIGIMON PREVIEW IMG WRAP -->
+                        <div class="product-preview-img-wrap" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                          <!-- DIGIMON PREVIEW IMG -->
+                          <a onclick="openAddEvoModal(<%- digimon.id %>, '<%- digimon.info.species %>')">
+                            <figure class="product-preview-img box_digimon">
+                              <img style="width: fit-content; max-width: 82px; max-height: 82px;" src="<%- digimon.info.sprite %>" alt="<%- digimon[0] %>">
+                            </figure>
+                          </a>
+                          <!-- /DIGIMON PREVIEW IMG -->
+                        </div>
+                        <!-- /DIGIMON PREVIEW IMG WRAP -->
+                        <p style="margin-top: 8px;"><b><%- digimon.info.species%></b><br></p>
+                      </div>
+                      <!-- /DIGIMON PREVIEW -->
+            <% }) %>
+            
+          </div>
+        </div>
+        <!-- /LAYOUT ITEM -->
+				</div>
+				<!-- /LAYOUT BODY -->
+
+				<!-- LAYOUT SIDEBAR 2 -->
+				<div class="layout-sidebar2 layout-item gutter-medium">
+          <!-- WIDGET SIDEBAR -->
+          <%- include("../../partials/tamer/sidebar/tamer") %>
+          <%- include("../../partials/tamer/sidebar/my_team") %>
+					<!-- /WIDGET SIDEBAR -->
+				</div>
+				<!-- /LAYOUT SIDEBAR 2 -->
+			</div>
+			<!-- LAYOUT CONTENT FULL -->
+
+			<%- include("../../partials/footer") %>
+      <%- include("../../functions/main") %>
+
+				<!-- app bundle -->
+				<script src="/app.bundle.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+				<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+        
+        <script>
+          function openAddEvoModal(id, species) {
+            Swal.fire({
+              padding: "0px",
+              title: `<h2 class="section-title small">${species} Add Evolution</h2><div class="section-title-separator"></div>`,
+              customClass: {
+                title: "section-title-wrap blue"
+              },
+              allowOutsideClick: true,
+              allowEscapeKey: true,
+              showConfirmButton: false,
+              html: `
+                  <div class="form-wrap">
+                    <!-- FORM ROW -->
+                    <div class="form-row">
+                      <!-- FORM ITEM -->
+                      <div class="form-item blue">
+                        <label for="addDigimonEvoId" class="rl-label">The new Evolution species/id</label>
+                        <input type="text" id="addDigimonEvoId" name="addDigimonEvoId" placeholder="Koromon/1" minlength="1">
+                      </div>
+                      <!-- /FORM ITEM -->
+                    </div>
+                    <!-- /FORM ROW -->
+
+                    <!-- FORM ACTIONS -->
+                    <div class="form-actions full">
+                      <!-- BUTTON -->
+                      <button id="addDigimonEvoIdButton" onclick="addEvo(${id})" class="button blue" style="margin-bottom: 8px;">
+                        Continue
+                        <!-- BUTTON ORNAMENT -->
+                        <span class="button-ornament">
+                          <!-- ARROW ICON -->
+                          <svg class="arrow-icon medium">
+                            <use xlink:href="#svg-arrow-medium"></use>
+                          </svg>
+                          <!-- /ARROW ICON -->
+
+                          <!-- CROSS ICON -->
+                          <svg class="cross-icon small">
+                            <use xlink:href="#svg-cross-small"></use>
+                          </svg>
+                          <!-- /CROSS ICON -->
+                        </span>
+                        <!-- /BUTTON ORNAMENT -->
+                      </button>
+                      <!-- /BUTTON -->
+                    </div>
+                    <!-- /FORM ACTIONS -->
+                  </div>
+                  <!-- /FORM WRAP -->
+            `
+            })
+          }
+          
+          const ADMIN = axios.create({
+            baseURL: `${window.location.origin}/api/adminbureau` 
+          })
+          
+          function addEvo(originalDigimonId) {
+            const field = document.getElementById("addDigimonEvoId")
+            const fieldValue = field.value
+            
+            ADMIN.post("/addEvo", {originalDigimonId, id: fieldValue, type: "to"})
+          }
+          
+        </script>
+</body>
+
+</html>

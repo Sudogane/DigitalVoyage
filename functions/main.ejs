@@ -1,0 +1,1243 @@
+<script src="/app.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js" integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/0.6.1/progressbar.min.js" integrity="sha512-7IoDEsIJGxz/gNyJY/0LRtS45wDSvPFXGPuC7Fo4YueWMNOmWKMAllEqo2Im3pgOjeEwsOoieyliRgdkZnY0ow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
+<%- include("./socket") %>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
+  
+<script>  
+  const API = axios.create({
+    baseURL: `${window.location.origin}/api` 
+  })
+  
+  let previousMarqueeData = {}
+  
+  function setLiveNewsData() {
+      const liveNews = document.getElementById("livenews_marquee")
+      //liveNews.innerHTML = "Disabled until futher notice"
+      //return
+    
+      setInterval(() => {
+        API.get("livenews").then(({ data }) => {
+          if(data[2] && previousMarqueeData[2] && previousMarqueeData[2].title === data[2].title && previousMarqueeData[2].content === data[2].content) return
+          previousMarqueeData = data 
+
+          let liveNewsContents = data.map((news, index) => ` <span class="xm-line-item" style="white-space: nowrap;"><span style="color: #fff">${news.title}</span> ${news.content} ${(data[index + 1]) ? '<span class="separator"><span class="separator-bar">/</span><span class="separator-bar">/</span></span> ' : ""}</span>`).join("")
+
+          liveNews.innerHTML = liveNewsContents
+        })
+      }, 1000)
+  }
+  
+  setLiveNewsData()
+  
+  function openMobileMenu() {
+    swal.fire(
+      {
+        showConfirmButton: false,
+        allowOutsideClick: true,
+        html: `
+                <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+                  <div class="ui-icon-wrap">
+                    <img class="ui-icon-30" style="margin-right: 8px;" src="https://ik.imagekit.io/projectvoyage/Interface/ui_digimon_0HF4BIuFA.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670783679134">
+                    <div>
+                      <h2 class="section-title">Digimon Voyage</h2>
+                      <h4 class="section-subtitle">Main Menu</h4>
+                    </div>
+                  </div>
+                  <div class="section-title-separator"></div>
+                </div>
+          
+          <div class="mobileversion-menu-wrapper">
+            <a class="mobileversion-menu-item" href="/">
+              <img class="ui-icon-60" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_myHome.png?v=1665342182400">
+              <h4 style="margin-top: 11px;">Home</h4>
+            </a>
+          
+            <% if(!locals.userData) { %>
+            <a class="mobileversion-menu-item" href="/login">
+              <img class="ui-icon-60" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_demiVeemon.png?v=1665342070850">
+              <h4>Login</h4>
+            </a>
+            <% } else { %>
+              <%- include("../partials/tamer/mobile/menuContents") %>
+            <% } %>
+          </div>
+        `
+      }
+    )
+  }
+</script>
+
+<% if(locals.userData) { %>
+<script>
+  <% if(userData.modules.stamina.current < userData.modules.stamina.max) { %>
+    const untilNextStaminaRegen = document.getElementById("user_sidebar_nextStaminaRegen")
+    const untilFullStaminaRegen = document.getElementById("user_sidebar_untilFullStamina")
+    
+    let MS_NextStaminaRegen = <%- staminaRegen.next %>;
+    let NextStaminaRegenCounter = setInterval(NextStaminaRegenTimer, 1000);
+
+    function NextStaminaRegenTimer() {
+      if (MS_NextStaminaRegen <= 0) {
+        clearInterval(NextStaminaRegenCounter);
+        return;
+      }
+
+      let minutes = Math.floor((MS_NextStaminaRegen % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((MS_NextStaminaRegen % (1000 * 60)) / 1000);
+
+      untilNextStaminaRegen.innerHTML = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      MS_NextStaminaRegen -= 1000;
+    }
+                                                                          
+    let MS_FullStaminaRegen = <%- staminaRegen.full %>;
+    let FullStaminaRegenCounter = setInterval(FullStaminaRegenTimer, 1000);
+
+    function FullStaminaRegenTimer() {
+      if (MS_FullStaminaRegen <= 0) {
+        clearInterval(FullStaminaRegenCounter);
+        return;
+      }
+
+      let hours = Math.floor((MS_FullStaminaRegen % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((MS_FullStaminaRegen % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((MS_FullStaminaRegen % (1000 * 60)) / 1000);
+
+      untilFullStaminaRegen.innerHTML = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      MS_FullStaminaRegen -= 1000;
+    }
+                                                                                                                                    
+  <% } %>
+  <% for(digimon of userData.modules.party) { %>
+  tippy("#party-box-<%- digimon._id %>", {
+    theme: "maintheme",
+    content: `
+      <div style="width: 240px">
+                  <div style="display: flex; justify-content: center; background: url('https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/dazhaodi.jpg?v=1665511760826'); background-size: cover; background-position: center; height: 180px; border-radius: 0 16px 0 0;">
+                    <img style="max-height: 80%; align-self: center;" src="<%- digimon.sprite %>">
+                  </div>
+                  
+                  <div class="TT-evolution">
+                    <div style="margin-bottom: 16px; text-align: center;">
+                      <h3><%- digimon.nickname || digimon.species %></h3>
+                      <%- (digimon.nickname && digimon.nickname.toLowerCase() !== digimon.species.toLowerCase()) ? `<p>${digimon.species}</p>` : "" %>
+                    </div>
+                    
+                    <div style="text-align: center; display: flex; justify-content: center; gap: 8px;">
+                      <h4>Level: <p style="display: inline;"> <%- digimon.level%></p><h4>
+                      <% 
+                        let additionalBaseExpNeeded = {
+                          "In-Training": 36,
+                          "Rookie": 50,
+                          "Champion": 76,
+                          "Ultimate": 120,
+                          "Mega": 160
+                        }
+                        let formExpMultiplier = {
+                          "In-Training": 0.95,
+                          "Rookie": 1.2,
+                          "Champion": 1.6,
+                          "Ultimate": 2.4,
+                          "Mega": 2.98
+                        }
+                        let tierExpMultiplier = 1
+                               
+                        let toLevelUp = Math.floor( ( additionalBaseExpNeeded[digimon.form] * (digimon.level * 0.868) ) * 2.35 )
+                        toLevelUp = Math.floor( toLevelUp * formExpMultiplier[digimon.form] )
+                      %>
+                      <h4>EXP: <p style="display: inline;"> <%- digimon.xp%>/<%- toLevelUp %></p><h4>
+                    </div>
+                    
+                    <div class="party-modal-stats">
+                      <p><b>Health:</b> <%- digimon.stats.health + digimon.stats.additional.health %> <b>Mana:</b> <%- digimon.stats.mana + digimon.stats.additional.mana %></p>
+                      <p><b>Attack:</b> <%- digimon.stats.attack + digimon.stats.additional.attack %> <b>Defense:</b> <%- digimon.stats.defense + digimon.stats.additional.defense %></p>
+                      <p><b>Speed:</b> <%- digimon.stats.speed + digimon.stats.additional.speed %></p>
+                    </div>
+      </div>
+    `,
+    allowHTML: true,
+    interactive: true
+  })
+  <% } %>
+  
+  
+  function mobileOpenPartyModal() {
+    swal.fire(
+      {
+        showConfirmButton: false,
+        allowOutsideClick: true,
+        width: "440px",
+        showClass: {
+          popup: 'animate__animated animate__fadeIn animate__faster'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__fadeOut animate__faster'
+        },
+        willOpen: (arg) => {
+          function createPartyHealthbar(index, health) {
+            let healthbar = document.getElementById("mobile-party-healthbar"+index)
+            healthbar = new ProgressBar.Line(healthbar, {
+              strokeWidth: 5,
+              easing: "easeInOut",
+              duration: 1400,
+              color: "#58d819",
+              trailColor: "#eee",
+              trailWidth: 1,
+              svgStyle: { width: "50%", height: "50%" },
+              path: {
+                style: {
+                  strokeLinecap: "round"
+                }
+              }
+            })
+            
+            healthbar.set(health)
+          }
+          
+          function createPartyExpProgressbar(index, exp) {
+            let expbar = document.getElementById("mobile-party-expbar"+index)
+            if(exp > 1) exp = 1
+            
+            expbar = new ProgressBar.Line(expbar, {
+              strokeWidth: 5,
+              easing: "easeInOut",
+              duration: 1400,
+              color: "#d8c519",
+              trailColor: "#eee",
+              trailWidth: 1,
+              svgStyle: { width: "50%", height: "50%" },
+              path: {
+                style: {
+                  strokeLinecap: "round"
+                }
+              }
+            })
+            
+            expbar.set(exp)
+          }
+          
+          <% if(typeof userData.modules.party !== 'undefined' && userData.modules.party.length !== 0) { %>
+            <% userData.modules.party.forEach((digimon, index) => { %>
+              <% 
+                  let additionalBaseExpNeeded = {
+                    "In-Training": 36,
+                    "Rookie": 50,
+                    "Champion": 76,
+                    "Ultimate": 120,
+                    "Mega": 160
+                  }
+                  let formExpMultiplier = {
+                    "In-Training": 0.95,
+                    "Rookie": 1.2,
+                    "Champion": 1.6,
+                    "Ultimate": 2.4,
+                    "Mega": 2.98
+                  }
+                  let tierExpMultiplier = 1
+
+                  let toLevelUp = Math.floor( ( additionalBaseExpNeeded[digimon.form] * (digimon.level * 0.868) ) * 2.35 )
+                  toLevelUp = Math.floor( toLevelUp * formExpMultiplier[digimon.form] )
+              %>
+              createPartyHealthbar(<%- index %>, <%- (digimon.health/( 2 * (digimon.stats.health+digimon.stats.additional.health) ) / 1.0)%>)
+              createPartyExpProgressbar(<%- index %>, <%- (digimon.xp/toLevelUp) * 1.0 %>)
+            <% })%>
+          <% } %>
+        },
+        html: `
+          <div class="mobileversion-partywrapper">
+					<% if (userData.newAccount === 3 && userData.modules.party.length !== 0) {%>
+							<!-- SECTION TITLE WRAP -->
+							<div class="section-title-wrap green" style="text-align: left; margin-bottom: 16px;">
+								<h2 class="section-title medium">
+									<img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_myTeam.png?v=1665342182620"> My Team
+								  
+                  <%
+                    let PartyPower = 0;  
+                    
+                    for(var i=0; i< userData.modules.party.length; i++) {
+                      const thisMon = userData.modules.party[i]
+                      Object.keys(thisMon.stats).forEach(stat => {
+                        if(stat === "additional") return
+                        PartyPower += thisMon.stats[stat] + thisMon.stats.additional[stat]
+                      })
+                    }
+                  
+                    PartyPower = Math.floor(PartyPower / 8.5)
+                  %>
+                    
+                  <div style="text-align: right; float: right; margin-top: 5px;"><%- PartyPower %> PP</div>
+                </h2>
+								<div class="section-title-separator"></div>
+							</div>
+							<!-- /SECTION TITLE WRAP -->
+              
+							<!--  MY TEAM PREVIEW -->
+							<div class="inventory-items-preview mobile-party">
+                <% for (var i=0; i < 3;  i++ ) { %>
+                  <% if(userData.modules.party[i]) { %>
+                    <!-- MY TEAM DIGIMON PREVIEW -->
+                    <div class="inventory-item-preview">
+                      <!-- DIGIMON PREVIEW -->
+                      <div class="product-preview small" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                        <!-- DIGIMON PREVIEW IMG WRAP -->
+                        <div class="product-preview-img-wrap">
+                          <!-- DIGIMON PREVIEW IMG -->
+                          <a href="/digibank/<%- userData.modules.party[i]._id %>">
+                            <figure class="product-preview-img box_digimon <%- (userData.modules.party[i].health === 0) ? 'battle-defeated' : ''%>">
+                              <img style="width: fit-content; max-width: 82px; max-height: 82px;" src="<%- userData.modules.party[i].sprite %>" alt="<%- userData.modules.party[i].species %>">
+                            </figure>
+                          </a>
+                          <!-- /DIGIMON PREVIEW IMG -->
+                        </div>
+                        <!-- /DIGIMON PREVIEW IMG WRAP -->
+                      </div>
+                      <!-- /DIGIMON PREVIEW -->
+                      <div class="party-progressbar"><div id="mobile-party-healthbar<%- i %>"></div></div>
+                      <div class="party-progressbar" style="margin-top: -8px;"><div id="mobile-party-expbar<%- i %>"></div></div>
+                    </div>
+                    <!-- /MY TEAM DIGIMON PREVIEW -->
+                  <% } else { %>
+                    <!-- MY TEAM DIGIMON PREVIEW -->
+                    <div class="inventory-item-preview empty party-preview" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                      <!-- NO DIGIMON ICON -->
+                      <div class="party-preview-nodigimon"></div>
+                      <!-- /NO DIGIMON ICON -->
+                    </div>
+                    <!-- /MY TEAM DIGIMON PREVIEW -->
+                  <% } %>
+                <% } %>
+							</div>
+							<!-- /MY TEAM PREVIEW -->
+                    
+              <%
+                let _lowHealthFilter = userData.modules.party.filter((digimon) => (digimon.health/ ( 2* (digimon.stats.health + digimon.stats.additional.health) ) * 100) <= 90)
+                if(_lowHealthFilter?.[0]) {
+              %>
+                <div class="lowhealth-warning" style="margin-top: 8px;">
+                  <% if(locals.STAGE) { %>
+                    <p style="text-align: center;">Your partners are low on health, but you can't go to the hospital right now.</p>
+                  <% } else { %>
+                    <p style="text-align: center;">Your Digimon are low on health, <a onclick="_openHospital()"><strong>click here</strong></a> to go to the hospital!</p>
+                  <% } %>
+                </div>
+              <% } %>
+					<% } %>
+        </div>
+        `
+      }
+    )
+  }
+  
+  <% if(!locals.STAGE) { %>
+  function _openHospital() {
+    Swal.fire({
+    padding: "0px",
+    title: `<h3 class="section-title small" style="text-align: left; text-transform: inherit;"><img class="ui-icon-30" src="https://ik.imagekit.io/projectvoyage/Interface/ui_hospital_ycjrd1eAY.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670297293156"> Centarumon's Hospital</h3><div class="section-title-separator"></div>`,
+    customClass: {
+      title: "section-title-wrap blue"
+    },
+    allowOutsideClick: true,
+    allowEscapeKey: true,
+    showConfirmButton: false,
+    html: `
+      <div class="hospital-modal">
+        <img style="max-width: 30%; position: absolute; top: 22%; right: 1%; width: 130px;" src="https://static.wikia.nocookie.net/digimon/images/1/12/Centarumon_vg.gif"></img>
+        <div class="bubble mobile-dialogue-hospital" style="margin-top: 90px; padding: 8px;"> <p>Welcome, <strong><%- (locals.userData) ? userData.username : "Placeholder" %></strong> to my Hospital.<br>Here, you can heal your digimon, but in order to heal them i'll have to charge you a few Bits.<br>Price: <strong><span class="icon-bits" style="margin-left: 2px;"></span>5 Bits</strong></p></div>
+        <button class="button blue button-normal" onclick="_hospitalHeal()" style="margin-top: 16px;">Heal Digimon</button>
+      </div>
+    `
+    })
+  }
+  
+  function _hospitalHeal() {
+    API.get("/hospital/heal").then(({ data }) => {
+      if(data.success) window.location.reload()
+      if(data.lowOnBits) alert("tu é pobre mano.")
+    })
+  }
+    
+  function _openAvatarModal() {
+    Swal.fire({
+      title: `<h3 class="section-title small" style="text-align: left; text-transform: inherit;"><img class="ui-icon-30" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_tamer.png?v=1665342182399"> My Avatar</h3><div class="section-title-separator"></div>`,
+      customClass: {
+        title: "section-title-wrap blue"
+      },
+      allowOutsideClick: true,
+      allowEscapeKey: true,
+      showConfirmButton: false,
+      html: `
+        <div style="height: max-content; padding: 16px;">
+          <img style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;border-radius: 8px;" width=254 height=254 src="<%- (userData && userData?.avatarUrl) ? userData?.avatarUrl : costume?.avatarUrl %>"></img>
+          <p style="margin-top: 1rem;"><b class="text-white">Change Avatar</b></p>
+
+          <form id="_uploadAvatar" enctype="multipart/form-data">
+              <input type="file" style="margin-top: 1rem" name="image" accept="image/*"/>
+              <button class="button blue button-normal" type="submit" style="margin-top: 32px;"><i class="fa-solid fa-turn-up" style="transform: scaleX(-1);"></i> Upload Avatar</button>
+          </form>
+        </div>
+      `,
+      willOpen: () => {
+        const avatarUploadForm = document.getElementById("_uploadAvatar")
+        avatarUploadForm.addEventListener('submit', async (event) => {
+          event.preventDefault()
+          const formData = new FormData(avatarUploadForm)
+          
+          API.post("/avatar", formData, { headers: { 'Content-Type': 'multipart/form-data' } }).then(({ data }) => {
+            //console.log(data)
+            if(data.success) return window.location.reload()
+          })
+        })
+      }
+    })
+  }
+
+  function _upgradeDigivice() {
+    API.get("/upgrade/digivice").then(({ data }) => {
+      if(data.success) window.location.reload()
+    })
+  }
+                        
+  function _openDigiviceLevelModal() {
+    
+    <%
+      const tamerRankRequiredDigivices = {
+        2: 3,
+        3: 5
+      }
+    %>
+    
+    Swal.fire({
+      title: `<h3 class="section-title small" style="text-align: left; text-transform: inherit;"><img class="ui-icon-30" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_tamer.png?v=1665342182399"> Digivice Level</h3><div class="section-title-separator"></div>`,
+      customClass: {
+        title: "section-title-wrap blue"
+      },
+      allowOutsideClick: true,
+      allowEscapeKey: true,
+      showConfirmButton: false,
+      html: `
+        <div style="height: max-content; padding: 16px;">
+          <img style="width: 100px; margin-top: 4px;" class="floater" src="https://ik.imagekit.io/projectvoyage/Interface/Digivices/DigiviceBasico_NkxA3Pec40.png?updatedAt=1679421663299"></img>
+          <div class="upgrade-info-container">
+            <p><b class="text-white">Current Level:</b> <%- userData.modules.levels.digivice %></p>
+            <p><b class="text-white">Scan Amount:</b> <%- digivice.minScan %>% - <%- digivice.maxScan%>%</p>
+            <p><b class="text-white">Stamina Cost:</b> 5 per Scan
+            <% if(digivice.requirementsToUpgrade) { %>
+              <br>
+              <br>
+              <p><b class="text-white">Requirements for next Level:</b>
+                <br>
+                <%- (digivice.requirementsToUpgrade.bits ) ? `${digivice.requirementsToUpgrade.bits} Bits` : ""%>
+                <br>
+                <%- (tamerRankRequiredDigivices[userData.modules.levels.digivice + 1]) ? `Tamer Rank ${tamerRankRequiredDigivices[userData.modules.levels.digivice + 1]}` : "" %>
+                <br>
+              </p>
+            <% } %>
+          </div>
+          <button class="button blue button-normal <%- (typeof digivice.requirementsToUpgrade === "undefined" || digivice.requirementsToUpgrade.bits > userData.modules.BITS || userData.modules.level < tamerRankRequiredDigivices[userData.modules.levels.digivice + 1]) ? "disabled" : "" %>" onclick="_upgradeDigivice()" style="margin-top: 32px;"><i class="fa-solid fa-turn-up" style="transform: scaleX(-1);"></i>  Upgrade Digivice</button>
+        </div>
+      `
+    })
+  }
+                   
+  async function _getGachaBannerData() {
+    try {
+      const response = await API.get("/gacha/banner");
+      return response.data;
+    } catch (error) {
+      console.error("Erro ao obter dados do Gacha:", error);
+      throw error;
+    }
+  }
+                             
+  async function _pullOnBanner(amount) {
+    try {
+      const response = await API.post("/gacha/banner/pull", { amount })
+      const { data } = response
+      
+      return _gachaPullAnimation(data.biggestRarity, data.items)
+    } catch (error) {
+      console.error("Erro ao atirar no Gacha")
+      
+      Toastify({
+        escapeMarkup: false,
+        text: `<h4>${error.response.data.error}</h4>`,
+        duration: 3000,
+        close: false,
+        gravity: "top",
+        position: "center", 
+        stopOnFocus: false,
+        className: "app-toast failure"
+      }).showToast()  
+      
+      throw error
+    }
+  }
+
+  function gerarEstrelas(numero) {
+    let estrelas = '';
+
+    for (let i = 0; i < numero; i++) {
+      estrelas += '\u2605';
+    }
+
+    return estrelas;
+  }  
+                     
+  function _gachaPullAnimation(rarity, items) {    
+    const animation = {
+      3: "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/Evo1.gif?v=1689606774504", 
+      4: "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/Evo2.gif?v=1689606785134", 
+      5: "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/Evo%203.gif?v=1689606789218"
+    }
+    
+    const ost = {
+      3: "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/gachaPull3.mp3?v=1689625741571",
+      4: "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/gachaPull4.mp3?v=1689625743273",
+      5: "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/gachaPull5.mp3?v=1689625742472"
+    }
+    
+    
+    const backgroundMusic = new Audio(ost[rarity])
+    
+    const testando = swal.mixin({
+      showConfirmButton: false,
+      showClass: {
+        popup: "animate__animated animate__fadeIn animate__faster"
+      },
+      customClass: {
+        htmlContainer: "swal2-html-container-full"
+      },
+      width: '46rem',
+      padding: '0rem',
+      html: `
+        <div id="_gachaPullBackground" style="overflow: hidden; width: 100%; height: 26rem; background: url(${animation[rarity]}); background-size: cover; border-radius: 0 16px 0 0 !important;">
+          <div id="_gachaPullContent" style="display: inline-grid; grid-template-columns: repeat(${(items.length > 1) ? 5 : 1}, 1fr); justify-content: center; align-items: center; gap: 1rem; height: 100%;"></div>
+        </div>
+      `,
+      willOpen: () => {
+        backgroundMusic.play()
+      },
+      didOpen: () => {
+        setTimeout(() => {
+          const bg = document.getElementById("_gachaPullBackground")
+          bg.style.backgroundImage = "url('https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/c49e4823-c1c8-4ae8-9b35-4e5f71d302ab.image.png?v=1684933252251')"
+          bg.classList.add("animate__animated")
+          bg.classList.add("animate__fadeIn")
+          bg.classList.add("animate__faster")
+          
+          setTimeout(() => {
+            const pullContent = document.getElementById("_gachaPullContent")
+
+            items.forEach((item, i) => {
+              pullContent.innerHTML += `
+                <div id="_gachaPullItem${i}" class="game-overlay-drop background-rarity-${item.rarity}" style="opacity: 0;">
+                  <div class="game-overlay-drop-icon" style="background: url(${item.icon}); background-position: center; background-repeat: no-repeat; background-size: 64px;"></div>
+                </div>
+              `
+              
+              setTimeout(() => {
+                const gi = document.getElementById(`_gachaPullItem${i}`);
+                gi.classList.add("animate__animated", "animate__bounceIn");
+
+                let audioSource;
+                switch (item.rarity) {
+                  case 5:
+                    audioSource = "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/interface-124464.mp3?v=1689628187135";
+                    break;
+                  case 4:
+                    audioSource = "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/click-124467.mp3?v=1689628188891";
+                    break;
+                  default:
+                    audioSource = "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/button-124476.mp3?v=1689628188049";
+                    break;
+                }
+
+                const dropEffect = new Audio(audioSource);
+                dropEffect.play();
+              }, 200 * (i * 2.5));
+              
+            })
+            
+          }, 800)
+          
+        }, 3000)
+      }, 
+      willClose: () => {
+        setInterval(() => {
+          if(backgroundMusic.volume > 0) backgroundMusic.volume -= 0.1
+        }, 100)
+        
+        _openGachaModal()
+      }
+    })
+    
+    testando.fire()
+  }
+                                                    
+  async function _openGachaModal() {
+    try {
+      const GachaBanner = await _getGachaBannerData();
+      
+      swal.fire({
+        showConfirmButton: false,
+        allowOutsideClick: true,
+        showClass: {
+          popup: 'animate__animated animate__zoomIn animate__faster'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__zoomOut animate__faster'
+        },
+        html: `
+          <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+            <div class="ui-icon-wrap">
+              <img class="ui-icon-30" style="margin-right: 8px;" src="https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/tamagotchi.png?v=1686179788844">
+              <div>
+                <h2 class="section-title">Invocation</h2>
+                <h4 class="section-subtitle">${GachaBanner.name}</h4>
+              </div>
+            </div>
+            <div class="section-title-separator"></div>
+          </div>
+
+          <div class="gacha-container">
+            <div class="gacha-header">
+              <div class="gacha-header-content">
+                <p style="color: #eef">Your Pity: <b style="color: #cce"><%- userData.modules.gacha.weapon.pity %>/${GachaBanner.maxPity}</b></p>
+              </div>
+
+              <div class="gacha-header-content">
+                <p style="color: #eef">Max Pulls: <b style="color: #cce"><%- userData.modules.gacha.weapon.pulls %>/${GachaBanner.maxPullCount}</b></p>
+              </div>
+            </div>
+
+            <div class="gacha-pool-container">
+              <div class="grid-5col_1 centered no-gutter" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 16px;">
+                ${GachaBanner.pool.sort((a, b) => b.rarity - a.rarity).map((item, i) => {
+                  return `<div id="gacha-slot-${i}" class="gacha-slot"><img style="width: 60px;" src="${item.icon}"/></div>`
+                }).join("")}
+              </div>
+            </div>
+
+            <div class="gacha-header bottom">
+              <p>Banner will end in: ${GachaBanner.timeout}</p>
+            </div>
+          </div>
+          
+          <div style="padding: 8px;">
+            <p style="color: #cce">Each summon costs <b style="color: #eef"><span class="ui-icon ui-icon-extra icon-data" style="vertical-align: middle;"></span> 160 Virtual Data</b></p>
+          </div>
+          
+          <div style="display: inline-flex; gap: 16px;">
+            <div><a onclick="_pullOnBanner(1)" class="button button-normal blue" style="margin-top: 16px;"><span class="ui-icon ui-icon-extra icon-data" style="vertical-align: middle;"></span> Summon</a></div>
+            <div><a onclick="_pullOnBanner(10)" class="button button-normal blue" style="margin-top: 16px;"><span class="ui-icon ui-icon-extra icon-data" style="vertical-align: middle;"></span> 10x Summon</a></div>
+          </div>
+        `,
+        willOpen: () => {
+          const TippyScripts = document.createElement("script")
+          TippyScripts.id = "gachaModalTippyScripts"
+          GachaBanner.pool.forEach((item, i) => {
+            TippyScripts.innerHTML += `
+              tippy("#gacha-slot-${i}", {
+                theme: "maintheme",
+                allowHTML: true,
+                interactive: true,
+                content: \`
+                  <div>
+                    <div style="display: flex; justify-content: center; border-radius: 0 16px 0 0;" class="background-rarity-${item.rarity || 3}">
+                      <img style="width: fit-content; max-width: 142px; max-height: 142px;" src="${item.icon}">
+                    </div>
+
+                    <div class="TT-evolution">
+                      <div style="margin-bottom: 16px; text-align: center;">
+                        <h3>${item.name}</h3>
+                        <span>${gerarEstrelas(item.rarity)}</span>
+                        <p>Equipment</p>
+                      </div>
+
+                      <div style="text-align: center">
+                        <h4>Level: <p style="display: inline;">1</p><h4>
+                      </div>
+
+                      <div class="party-modal-stats" style="padding: 4px;">
+                        <div style="display: flex; justify-content: center; text-align: center; gap: 8px;">
+                          <p><b>Atk:</b> +${item.mainStat}</p>
+                          <p><b>${item.subStat}:</b> +${item.statAmountIncrease}</p>
+                        </div>
+                        <p style="text-align: left; padding: 4px;"><b>${item.passive.name}:</b><br>${item.passive.description}</p>
+                      </div>
+                      
+                  </div>
+                \`
+              })
+            `
+          })
+
+          document.body.appendChild(TippyScripts)
+        },
+        willClose: () => {
+          document.getElementById("gachaModalTippyScripts").remove()
+        }
+      })
+    } catch (error) {
+      console.error("Erro ao abrir o modal do Gacha:", error);
+      // Adicione aqui qualquer tratamento de erro necessário
+    }
+  }
+                             
+  const lastTimeDailyRedeem = new Date("<%- userData.modules.cooldowns.daily %>").getTime()
+  const canRedeemDaily = lastTimeDailyRedeem < Date.now()
+  let dailyInterval
+  let now = Date.now()
+  let lostDailyStreak = ![0, 946692000000].includes(lastTimeDailyRedeem) && now - lastTimeDailyRedeem > 151200000
+  
+  handleDailyNotification()
+  function handleDailyNotification() {
+    var millis = lastTimeDailyRedeem - Date.now();
+
+    function displaytimer(){
+      var hours = Math.floor(millis / 36e5),
+      mins = Math.floor((millis % 36e5) / 6e4),
+      secs = Math.floor((millis % 6e4) / 1000);
+
+      if(hours < 0 && mins < 0 && secs < 0) {
+        clearInterval(dailyInterval)
+        return addDailyNotification() 
+      }
+    }
+
+    dailyInterval = setInterval(function(){
+      millis -= 1000;
+      displaytimer();
+    }, 1000); 
+  }
+                             
+  function addDailyNotification() {
+    const dailyButton = document.getElementById("nav-daily")
+    dailyButton.innerHTML += "<span class='badge'></span>"
+    dailyButton.classList.add("animate__animated")
+    dailyButton.classList.add("animate__pulse", "animate__infinite")
+  }
+
+        
+  async function getDailyRewards() {
+    // fazer tratamento de erro depois.
+    const response = await API.get("/daily/rewards")
+    
+    return response.data.rewards
+  }
+                             
+  function redeemDailyReward(rewardIndex) {
+    API.post("/daily/redeem", { rewardIndex }).then((response) => {
+      if(response.status === 200) {
+        Toastify({
+          escapeMarkup: false,
+          text: `<h4>${response.data.text}</h4>`,
+          duration: 3000,
+          close: false,
+          gravity: "top",
+          position: "center", 
+          stopOnFocus: false,
+          className: "app-toast success"
+        }).showToast()  
+        
+        for(let i=0; i<response.data.streak; i++) {
+          const RD = document.getElementById(`dailyreward-slot-${i}`)
+          RD.classList.remove("animate__pulse")
+        }
+        
+        const rewardDiv = document.getElementById(`dailyreward-slot-${response.data.index - 1}`)
+        const streak = document.getElementById("daily-streak")
+        const dtx = document.getElementById("daily-message")
+        dtx.innerHTML = ""
+        streak.textContent = response.data.streak
+        
+        rewardDiv.classList.remove("animate__infinite", "animate__pulse")
+        const dailyButton = document.getElementById("nav-daily")
+        dailyButton.innerHTML = `<img class="main-menu-icon" src="https://ik.imagekit.io/projectvoyage/Interface/ui_gift_lSDHNSYTG.png?updatedAt=1686881326809"> Daily`
+        dailyButton.classList.remove("animate__infinite")
+        rewardDiv.classList.add("animate__flash")
+        rewardDiv.onclick = ""
+        rewardDiv.classList.add("daily-reward-redeemed")
+      }
+      
+    })
+  }
+
+  function generateDailyRewardsList(rewardsList, redeemable) {
+    let rewards = ""
+    
+    rewardsList.forEach((reward, i) => {
+      const isRedeemable = ((redeemable) === i) && canRedeemDaily
+      const redeemDailyReward = `onclick=redeemDailyReward(${redeemable})`
+      rewards += `
+        <div id="dailyreward-slot-${i}" ${(isRedeemable) ? redeemDailyReward : ""} style="padding: 4px;" class="gacha-slot ${(i<(redeemable)) ? "daily-reward-redeemed" : ""} ${(isRedeemable) ? 'animate__animated animate__pulse animate__infinite' : ''}"><img style="width: 60px;" src="${reward.icon}"/></div>
+      `  
+    })
+    
+    return rewards
+  }
+                             
+  async function dailyModal() {
+      const rewardList = await getDailyRewards()
+      const rewardsHTML = generateDailyRewardsList(rewardList, <%- userData.modules.daily.streak %>)
+                                                   
+      swal.fire({
+        showConfirmButton: false,
+        allowOutsideClick: true,
+        showClass: {
+          popup: 'animate__animated animate__zoomIn animate__faster'
+        },
+        hideClass: {
+          popup: 'animate__animated animate__zoomOut animate__faster'
+        },
+        html: `
+          <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+            <div class="ui-icon-wrap">
+              <img class="ui-icon-30" style="margin-right: 8px;" src="https://ik.imagekit.io/projectvoyage/Interface/ui_gift_lSDHNSYTG.png?updatedAt=1686881326809">
+              <div>
+                <h2 class="section-title">Daily Login</h2>
+                <h4 class="section-subtitle ${(lostDailyStreak) ? "text-red" : ""}"><span id='daily-streak'">${(lostDailyStreak) ? "0" : "<%- userData.modules.daily.streak %>"}</span> Daily Streak</h4>
+              </div>
+            </div>
+            <div class="section-title-separator"></div>
+            
+              <div class="grid-5col_1 centered no-gutter" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; padding: 16px; margin-top: 16px;">
+                ${rewardsHTML}
+              </div>
+              
+              <p id="daily-message" style="margin-top: 8px; text-align: center;">${(canRedeemDaily) ? "You <b>can</b> redeem your Daily Gift!" : "<div id='daily-countdown' style='text-align: center;'></div>"}</p>
+          </div>
+        `,
+          didOpen: () => {
+            var millis = lastTimeDailyRedeem - Date.now();
+
+            var hours = Math.floor(millis / 36e5),
+            mins = Math.floor((millis % 36e5) / 6e4),
+            secs = Math.floor((millis % 6e4) / 1000);
+            document.getElementById("daily-countdown").innerHTML= `<p class="text-yellow"><b>${hours}:${mins}:${secs}</b></p>`
+            
+            function displaytimer(){
+                var hours = Math.floor(millis / 36e5),
+                    mins = Math.floor((millis % 36e5) / 6e4),
+                    secs = Math.floor((millis % 6e4) / 1000);
+              
+                    if(hours <= 0 && mins <= 0 && secs <= 0) return window.location.reload()
+                    document.getElementById("daily-countdown").innerHTML= `<p class="text-yellow"><b>${hours}:${mins}:${secs}</b></p>`
+            }
+            
+            setInterval(function(){
+                millis -= 1000;
+                displaytimer();
+            }, 1000);
+          }
+      })
+  }
+                                                                                    
+    function _createBattle(id) {
+        API.post("/chrono/createBattle", { id }).then(({data}) => {
+          if(data.action === "redirectToBattle") location.href = `/battle/chrono/${id}`
+        })
+    }
+                                                
+    function _openExploreMenu() {
+            
+            const tabBody = `
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <a href="/campaign/adventure" class="voyage-menu-display" style=" background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/dl_bg3_U0-azEyhP.jpg?updatedAt=1688052739774'); background-position: center; background-size: cover;">
+                            <p>Adventure 01</p>
+                          </a>
+                        </div>
+                        <!-- /TAB ITEM -->
+                        
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <div style="gap: 16px; display: flex; flex-direction: column;">
+                            <a <%- (userData.modules.level < 4) ? "" : "onclick='_createBattle(\"chrOfBits\")'"%>" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+                              
+                              <% if(userData.modules.level < 4) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Chrono Depths of Bits</p>
+                                  <p style="color: #f30a5c">Tamer Rank 4</p>
+                                </div>
+                              <% } else { %>
+                                <p>Chrono Depths of Bits</p>
+                              <% } %>
+                              
+                            </a>
+
+                            <a <%- (userData.modules.level < 4) ? "" : "onclick='_createBattle(\"chrOfExperience\")'"%> class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+
+                              <% if(userData.modules.level < 4) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Chrono Depths of Experience</p>
+                                  <p style="color: #f30a5c">Tamer Rank 4</p>
+                                </div>
+                              <% } else { %>
+                                <p>Chrono Depths of Experience</p>
+                              <% } %>
+
+                            </a>
+                          </div>
+                        </div>
+                        <!-- /TAB ITEM -->
+                        
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <a href="/coliseum" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Backdrops/smzb_uk4NdSNfv.jpg?updatedAt=1680108888994'); background-position: center; background-size: cover;">
+                            <p>Coliseum</p>
+                          </a>
+                        </div>
+                        <!-- /TAB ITEM -->
+                        
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <div style="gap: 16px; display: flex; flex-direction: column;">
+                            
+                            <a <%- (userData.modules.level < 999) ? "" : ""%>" class="voyage-menu-display" style="background: url('https://img3.gelbooru.com//samples/b9/4a/sample_b94a7e5f6d423bdb3120e4505f102c1c.jpg'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Digitamamon's Shop</p>
+                                  <p style="color: #f30a5c">Not Yet Available</p>
+                                </div>
+                              <% } else { %>
+                                <p>Help me</p>
+                              <% } %>
+                            </a>
+                            
+                            </div>
+                        </div>
+                        <!-- /TAB ITEM -->
+                        
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <div style="gap: 16px; display: flex; flex-direction: column;">
+                            <a <%- (userData.modules.level < 999) ? "" : ""%>" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>DNA Modification</p>
+                                  <p style="color: #f30a5c">Not Yet Available</p>
+                                </div>
+                              <% } else { %>
+                                <p>Help me</p>
+                              <% } %>
+                            </a>
+                            
+                            <a <%- (userData.modules.level < 999) ? "" : ""%>" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Core Modification</p>
+                                  <p style="color: #f30a5c">Not Yet Available</p>
+                                </div>
+                              <% } else { %>
+                                <p>Help me</p>
+                              <% } %>
+                            </a>
+                          
+                              <a <%- (userData.modules.level < 999) ? "" : ""%>" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+                                <% if(userData.modules.level < 999) { %>
+                                  <div class="voyage-menu-display-locked">
+                                    <p>Jogress Evolution</p>
+                                    <p style="color: #f30a5c">Not Yet Available</p>
+                                  </div>
+                                <% } else { %>
+                                  <p>Help me</p>
+                                <% } %>
+                              </a>
+                              
+                            <a <%- (userData.modules.level < 999) ? "" : ""%>" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>X-Antibody Modification</p>
+                                  <p style="color: #f30a5c">Not Yet Available</p>
+                                </div>
+                              <% } else { %>
+                                <p>Help me</p>
+                              <% } %>
+                            </a>
+                            
+                            <a <%- (userData.modules.level < 999) ? "" : ""%>" class="voyage-menu-display" style="background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/24464581825_TypVaqVQe.png?updatedAt=1688052456052'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Xross Evolution</p>
+                                  <p style="color: #f30a5c">Not Yet Available</p>
+                                </div>
+                              <% } else { %>
+                                <p>Help me</p>
+                              <% } %>
+                            </a>
+                            </div>
+                        </div>
+                        <!-- /TAB ITEM -->
+                        
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <div style="margin-top: -1rem; gap: 16px; display: flex; flex-direction: column;">
+                            <h4>Permanent Events</h4>
+                            <a <%- (userData.modules.level >= 2) ? "href='/events/worldboss'" : ""%> class="voyage-menu-display" style="background: url('https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/8c6502190d87e638f1f639ac10fbcbf8.jpg?v=1688353069506'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 2) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>World Boss</p>
+                                  <p style="color: #f30a5c">Tamer Rank 2</p>
+                                </div>
+                              <% } else { %>
+                                <p>World Boss</p>
+                              <% } %>
+                            </a>
+
+                            <a class="voyage-menu-display" style="background: url('https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/03dea6f5-a085-4bc1-8ea0-f015fdff211e.image.png?v=1688353247030'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Distorted Reality</p>
+                                  <p style="color: #f30a5c">Not available yet</p>
+                                </div>
+                              <% } else { %>
+                                <p>Distorted Reality</p>
+                              <% } %>
+                            </a>
+                            
+                            <a class="voyage-menu-display" style="background: url('https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/518fe820-cc7d-46b5-87fb-3aff821bba34.image.png?v=1688353741679'); background-position: center; background-size: cover;">
+                              <% if(userData.modules.level < 999) { %>
+                                <div class="voyage-menu-display-locked">
+                                  <p>Unkown Abyss</p>
+                                  <p style="color: #f30a5c">Not available yet</p>
+                                </div>
+                              <% } else { %>
+                                <p>Unkown Abyss</p>
+                              <% } %>
+                            </a>
+                          </div>
+                        </div>
+                        <!-- /TAB ITEM -->
+            `
+            
+            const tabHeader = `
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">Campaign</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+                        
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">Exploration</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+                        
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">Tamer Center</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+                        
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">Market Zone</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+                        
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">Laboratory</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+                        
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">Events</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+            `
+      
+            Swal.fire({
+              width: "660px",
+              showConfirmButton: false,
+              html: `
+                <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+                  <div class="ui-icon-wrap">
+                    <img style="margin-right: 8px;" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_campaign.png?v=1665098447605">
+                    <div>
+                      <h2 class="section-title "> Digital Hub</h2>
+                      <h4 class="section-subtitle"> Explore the vast Digital World</h4>
+                    </div>
+                  </div>
+                  <div class="section-title-separator"></div>
+                </div>
+                
+                    <!-- TAB WRAP -->
+                    <div id="_mainMenuExplore" class="tab-wrap">
+                      <!-- TAB HEADER -->
+                      <div class="tab-header items-6">
+                        ${tabHeader}
+                      </div>
+                      <!-- /TAB HEADER -->
+
+                      <!-- TAB BODY -->
+                      <div class="tab-body" id="voyage-menu-body" style="height: 16rem; overflow-y: scroll; background-image: url('https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/2a35e66d-9740-457c-b441-9ed0d983c29e.image.png?v=1683047176662'); background-size: cover; background-position: center;">
+                        ${tabBody}
+                      </div>
+                      <!-- /TAB BODY -->
+                    </div>
+                    <!-- /TAB WRAP -->
+              `,
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+              }
+            })
+      
+            XM_Tab({
+              container: '#_mainMenuExplore'
+            });
+    }
+
+  <% } %>
+  
+  function createPartyHealthbar(index, health) {
+    const healthbar = document.getElementById(`party-healthbar${index}`)
+    const healthBar = new ProgressBar.Line(healthbar, {
+      strokeWidth: 5,
+      easing: "easeInOut",
+      duration: 1400,
+      color: "#58d819",
+      trailColor: "#eee",
+      trailWidth: 1,
+      svgStyle: { width: "50%", height: "50%" },
+      path: {
+        style: {
+          strokeLinecap: "round"
+        }
+      }
+    })
+
+    healthBar.set(health)
+  }
+                        
+  function createPartyExpbar(index, health) {
+    if(health > 1) health = 1
+    
+    const healthbar = document.getElementById(`party-expbar${index}`)
+    const healthBar = new ProgressBar.Line(healthbar, {
+      strokeWidth: 5,
+      easing: "easeInOut",
+      duration: 1400,
+      color: "#d8c519",
+      trailColor: "#eee",
+      trailWidth: 1,
+      svgStyle: { width: "50%", height: "50%" },
+      path: {
+        style: {
+          strokeLinecap: "round"
+        }
+      }
+    })
+
+    healthBar.set(health) 
+  }
+  
+  <% userData.modules.party.forEach((digimon) => { %>
+    
+  <% 
+      let additionalBaseExpNeeded = {
+        "In-Training": 36,
+        "Rookie": 50,
+        "Champion": 76,
+        "Ultimate": 120,
+        "Mega": 160
+      }
+      let formExpMultiplier = {
+        "In-Training": 0.95,
+        "Rookie": 1.2,
+        "Champion": 1.6,
+        "Ultimate": 2.4,
+        "Mega": 2.98
+      }
+      let tierExpMultiplier = 1
+                               
+      let toLevelUp = Math.floor( ( additionalBaseExpNeeded[digimon.form] * (digimon.level * 0.868) ) * 2.35 )
+      toLevelUp = Math.floor( toLevelUp * formExpMultiplier[digimon.form] )
+  %>
+    
+    createPartyHealthbar(<%- userData.modules.party.indexOf(digimon) %>, <%- (digimon.health/(2 * (digimon.stats.health+digimon.stats.additional.health))) * 1.0%>)
+    createPartyExpbar(<%- userData.modules.party.indexOf(digimon) %>, <%- (digimon.xp/toLevelUp) * 1.0 %>)
+
+  <% }) %>
+</script>
+<% } %>
+  
+<script>
+console.error(`
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.....@@@@@@@@@....@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/.....@@  .&/. @@* ..%  %..,
+@@,...@@@@@@@@@@@@@......@@@@@@@@@@@@@@@@@@@@@,.....@@*&&&&///%...@ /@@@@@/.#@..
+@@.,@/.*&(****(**,%(@..%,.%@@@@@@@@@@@@@@@@%../# %#%#&/.   ,#*    & @%@%@&@@(../
+@@.*@...&/. &/   /(##...%..@@,..@@..,@@@@@...&&&#***(.    &,  &&&&@.  @@@@@..@@@
+@@...@.   #.  &/. .@@@./%.....@  .@@..#@,.@@(*&&.@@@&&&///&,......./@.. ./@.*@@@
+@@@.@/@&&&#...   /*(& ..%//@@  *../. @...@     &(*&.    @@./&/@@@@@@@@@@@.../@@@
+@@@%...@@@@.@@ .&*#&   .,@  @@#%%@.@#/.@.      .&(#&  .@. @..............,@@@@@@
+@@@@@@.*@@@@@@*&.*%(%%*//@  @@@%@#&,. #&%####((#% .&#, %@@@@@@@@@@@@@&*..,@@@@@@
+@@@@@@@@,...@@@@@(../&&&@&@ ..@@@#/ .@&@@/@@...../. %#((&*@@@@@@.....*@@@@@@@@@@
+@@@@@@@@@@...@(#&(@.@/..@@@  .//.  @/@(...@@@./&.@&(/****(&*@..,@@@@@@@@@@@@@@@@
+@@@@@@@@@..@((#&@@#@@@@& /&@  .  .@@&&/.  .  @@@#@@@@@@@@@@@@(/...@@@@@@@@@@@@@@
+@@@@@@@@@./@@@*(&%.., ,%****   .@(@(***(#& &.#@@@#((//&(***(#@,...@@@@@@@@@@@@@@
+@@@@@@@@@..@  &./%@@ &**(.  @@#@@/ &&(**((. & @@@/.. &...//&&*&@..&@@@@@@@@@@@@@
+@@@@@@@...# .@/..%@@ ,**/   @@@&    /&***(. & @/....#..      .&(@..@@@@@@@@@@@@@
+@@@@@@,.@ /@@@@//#@ .**&,    @@,   &&&***(& &%/.... #.        %.&@..@@@@@@@@@@@@
+@@@@@..@.@@@@@@@/# .&*& /.   #/   /..&/**(& &%/.@@@@@.        %.  ,..@@@@@@@@@@@
+@@@@@..@@@@@@@@@/% &,*&  &       .&.  (**(& & /%#@@@@@@(   /@@@%.  @..@@@@@@@@@@
+@@@@@..@@@@@@@//@(.&*&.  .&/    &/.   (**(& &,   /@@@@@@@@@@@@@@@.  @.,@@@@@@@@@
+@@@@..@@@@@@/@..@(&,*&      &/&,     /(**(& &,   @@@&@@@@@@@@@@@@@.  &.@@@@@@@@@
+@@@%.@.@@@%@....@(&,****/    .    .((***(#  &(.  @@@*@/@@@@@@@@@@@(. ,..@@@@@@@@
+@@@..@@@@/#..@..@&  &,****&&   #&(***(%&   @@%#//@@@*..@@@.&./@@@@@@.,..@@@@@@@@
+@@.*.@@...(@@@,..&%%@  &**********(&   @%%####%@@@@..@@@@@@*...@/@@@@.@..@@@@@@@
+@..*@@..,@@@@@@@,..@#%@  &*****#&&   @%######@@@@...&@@@@@@@@@@...(@@& @.@@@@@@@
+@..@...@@@@@@@@@@@,..@#%&   &&&   @%%#####@@@@@..,@@@@@@@@@@@@@@@..@/@.@.@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@...&%%@   (%%#####@#@@@@..,@@@@@@@@@@@@@@@@@@,..@@@.@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@/..%%%@%#####%@@#/@%..&@@@@@@@@@@@@@@@@@@@@@...../@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@,..@@###@@@@@#/@...@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@,......@@@##/@@..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,..@&#/@..,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,..##/@@..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..*%#/@%..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..@&#/@..,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,......,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+`)
+console.error(`
+888       888                           d8b                        
+888   o   888                           Y8P                        
+888  d8b  888                                                      
+888 d888b 888  8888b.  888d888 88888b.  888 88888b.   .d88b.       
+888d88888b888     "88b 888P"   888 "88b 888 888 "88b d88P"88b      
+88888P Y88888 .d888888 888     888  888 888 888  888 888  888      
+8888P   Y8888 888  888 888     888  888 888 888  888 Y88b 888      
+888P     Y888 "Y888888 888     888  888 888 888  888  "Y88888      
+                                                          888      
+                                                     Y8b d88P      
+                                                      "Y88P"    `);
+console.log(`%cMessing around or copying and pasting code on this console can break your game and may lead to potential account hacks. I strongly advise against using this feature at all. Stay safe and enjoy the game responsibly.`, "color: #f30a5c")
+
+</script>

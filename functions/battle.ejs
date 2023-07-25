@@ -1,0 +1,665 @@
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/progressbar.js/0.6.1/progressbar.min.js" integrity="sha512-7IoDEsIJGxz/gNyJY/0LRtS45wDSvPFXGPuC7Fo4YueWMNOmWKMAllEqo2Im3pgOjeEwsOoieyliRgdkZnY0ow==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="https://fonts.googleapis.com/css2?family=Passion+One&display=swap" rel="stylesheet">
+
+<script>  
+  class BattleHelper {
+    constructor() {
+      
+      this.API = axios.create({ 
+        baseURL: `${window.location.origin}/api/battle` 
+      })
+      
+      this.DEBUG = false
+    
+      this.UI = {
+        healthbars: {
+          enemy: [],
+          party: []
+        },
+        turn: {
+          wrapper: document.getElementById("battle_turn_wrap"),
+          text: document.getElementById("battle_turn")
+        },
+        damageDisplays: {
+          enemy: [],
+          party: []
+        },
+        selectors: [],
+        menu: {
+          buttons: {
+            actions: [
+              document.getElementById("BATTLE_MOVES"),
+              document.getElementById("BATTLE_SCAN"),
+              document.getElementById("BATTLE_ITEMS"),
+              document.getElementById("BATTLE_FLEE")
+            ]
+          },
+          battleLog: document.getElementById("BATTLE_LOG"),
+          moves: document.getElementById("BATTLE_MOVELIST"),
+          actions: document.getElementById("BATTLE_ACTIONS")
+        },
+        sprites: {
+          enemy: [],
+          party: []
+        }
+      }
+      
+      this.Audio = {}
+      
+      this.enemySelected = 0
+      
+      this.setButtonsSoundHandlers()
+      this.playBackgroundMusic()
+    }
+    
+    setBattleLog(battleLogContent) {
+      if(!battleLogContent || battleLogContent.length === 0) return this.UI.menu.battleLog.innerHTML = "<p>The battle log is empty...</p>"
+      
+      this.UI.menu.battleLog.innerHTML = `
+        <p>${battleLogContent.map((log) => `${log}`).reverse().join("<br>")}</p>
+      `
+    }
+    
+    createHealthbar(enemyOrParty, characterIndex, characterInfo) {
+      const healthbar = document.getElementById(`battle-${enemyOrParty}healthbar${characterIndex}`)
+      
+      const healthbarConfig = {
+        enemy: {
+          strokeWidth: 3,
+          color: "#1c95f3"
+        },
+        party: {
+          strokeWidth: 4,
+          color: "#58d819"
+        }
+      }
+      const thisHealthbarConfig = healthbarConfig[enemyOrParty]
+      
+      const healthBar = new ProgressBar.Line(healthbar, {
+        strokeWidth: thisHealthbarConfig.strokeWidth,
+        easing: "easeInOut",
+        duration: 1400,
+        color: thisHealthbarConfig.color,
+        trailColor: "#eee",
+        trailWidth: 1,
+        svgStyle: { width: "50%", height: "50%" },
+        path: {
+          style: {
+            strokeLinecap: "round"
+          }
+        }
+      })
+      
+      healthBar.set((characterInfo.health/characterInfo.maxHealth) * 1.0)
+      this.UI.healthbars[enemyOrParty].push(healthBar)
+    }
+    
+    updateHealthbar(enemyOrParty, index, health) {
+      this.UI.healthbars[enemyOrParty][index].set(health)
+      
+      // Re-write - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+      this.checkIfDigimonIsDead(enemyOrParty, index, health)
+    }
+    
+    // Re-write - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    checkIfDigimonIsDead(enemyOrParty, index, health, isInitialStage) {
+      this._log(index, health)
+      
+      if(isInitialStage && health === 0) this.UI.sprites[enemyOrParty][index].style.opacity = 0
+      
+      if(health === 0 && !isInitialStage) {
+        this.playDeathSound()
+        this.UI.sprites[enemyOrParty][index].classList.add("battle-defeated")
+        
+        this._wait(150, this.UI.sprites[enemyOrParty][index].classList.add("animate__animated", "animate__zoomOut") )
+        this._wait(180, this.UI.sprites[enemyOrParty][index].style.opacity = 0)
+      }
+    }
+    
+    displayTurn(enemyTurn) {
+      let hasBattleEnded = this.checkForBattleEnd()
+      
+      if(!hasBattleEnded) {
+        this.API.get("/turn").then(({data}) => {
+          const isEnemyTurn = data.turn.current.enemy
+          const turnTextToDisplay = (isEnemyTurn) ? "Enemy's Turn" : "Your Turn"
+
+          this._log(`TURN INFO -------------`)
+          this._log(data.turn)
+          
+          this.setBattleLog(data.battleLog)
+          this.animateTurnDisplay(turnTextToDisplay)
+
+          this.resetBattleSelectorDisplay()
+          if(!data.turn.current.enemy) this.handleButtons("setDisable", false)
+        })
+      }
+    }
+    
+    animateTurnDisplay(turnTextToDisplay) {
+      const { text, wrapper } = this.UI.turn
+      
+      text.innerHTML = turnTextToDisplay
+      wrapper.style.display = "flex"
+      wrapper.classList.add("animate__animated", "animate__flash")
+      
+      this._wait(1600, () => {
+        wrapper.classList.remove("animate__animated", "animate__flash")
+        wrapper.style.display = "none"
+        this.turnFunctionThatIDKaName()
+      })    
+    }
+    
+    turnFunctionThatIDKaName() {
+      this.API.get("/").then(({data}) => {
+        const hasBattleEnded = this.checkForBattleEnd()
+        //console.log(hasBattleEnded)
+        if(hasBattleEnded) return
+        
+        if(data.turn.current.enemy) {
+          this.displayTurn()
+          this._log("Main Function ---------------")
+          this._log(data)
+          
+          this.updateHealthbar("party", data.enemyAttacks, (data.health/data.maxHP) * 1.0)
+          this.animateSpriteDealingDamage("enemy", data.turn.currentEnemyIndex)
+          this._wait( 365, this.displayDamage(true, data.enemyAttacks, data.enemyDMG) )
+        }
+      })
+    }
+    
+    createDamageCounter(enemyOrParty, damageDisplay) {
+      this.UI.damageDisplays[enemyOrParty].push(damageDisplay)
+    }
+    
+    displayDamage(isEnemyAttack, whoGotAttacked, damageDealt) {
+      const enemyOrParty = (isEnemyAttack) ? "party" : "enemy"
+      const damageCounter = this.UI.damageDisplays[enemyOrParty][whoGotAttacked]
+      
+      this.playHitSound()
+      
+      damageCounter.innerHTML = damageDealt
+      this.animateDamageCounter(damageCounter)
+      this.animateSpriteReceivingDamage(enemyOrParty, whoGotAttacked)
+    }
+    
+    animateDamageCounter(counter) {
+      counter.classList.remove("animate__fadeOut")
+      counter.classList.add("animate__animated", "animate__bounceIn")
+      
+      this._wait(1500, () => {
+        counter.classList.remove("animate__bounceIn")
+        counter.classList.add("animate__fadeOut")
+      })
+    }
+    
+    createBattleSelectors(index, selector) {
+      this.UI.selectors.push(selector)
+      
+      document.getElementById(`battle-enemy${index}`).addEventListener("click", () => {
+        this.handleBattleSelectorDisplay(index)
+      })
+    }
+    
+    handleBattleSelectorDisplay(index) {
+      this.enemySelected = index
+      
+      for(var i=0; i<this.UI.selectors.length; i++) {
+        (i === index) ? this.UI.selectors[i].style.display = "block" : this.UI.selectors[i].style.display = "none"
+      }
+    }
+    
+    resetBattleSelectorDisplay() {
+      for(var i=0; i<this.UI.selectors.length; i++) {
+        this.UI.selectors[i].style.display = "none"
+      }    
+    }
+    
+    createCharacterSprites(type, spriteDiv) {
+      this.UI.sprites[type].push(spriteDiv)
+    }
+    
+    animateSpriteReceivingDamage(enemyOrParty, index) {
+      const sprite = this.UI.sprites[enemyOrParty][index]
+      
+      sprite.classList.add("animate__animated", "animate__shakeX")
+      
+      this._wait(1500, () => sprite.classList.remove("animate__animated", "animate__shakeX"))
+    }
+    
+    animateSpriteDealingDamage(enemyOrParty, index) {
+      const sprite = this.UI.sprites[enemyOrParty][index]
+      this._log("[ANIMATE DEALING DAMAGE] ----------")
+      this._log(enemyOrParty, index)
+      
+      sprite.classList.add("animate__animated", "animate__tada", "animate__faster")
+      
+      this._wait(1500, () => sprite.classList.remove("animate__animated", "animate__tada", "animate__faster"))
+    }
+    
+    useMove(name) {
+      this.API.post("/useMove", { move: name, target: this.enemySelected }).then(({data}) => {
+        this._log("[USE MOVE] ---------")
+        this._log(data)
+        
+        this.playButtonClickSound()
+        this.animateSpriteDealingDamage("party", data.digimonIndex)
+        this.handleButtons("setDisable", true)
+        this.displayDamage(false, data.enemyAttacked, data.damageDealt)
+        this.updateHealthbar("enemy", data.enemyAttacked, (data.enemyHP/data.enemyMaxHP) * 1.0)
+        this.updateUI()
+      })
+    }
+
+    fleeBattle() {
+      this.API.post("/flee").then(({data}) => {
+        const { fled } = data
+
+        if(fled) location.href = "/campaign/adventure"
+        else {
+          Toastify({
+            escapeMarkup: false,
+            text: "<h4>You couldn't escape!</h4>",
+            duration: 3000,
+            close: false,
+            gravity: "top",
+            position: "center", 
+            stopOnFocus: false,
+            className: "app-toast"
+          }).showToast()          
+          this.updateUI()
+        }
+      })
+    }
+    
+    handleButtons(action, value) {
+      switch(action) {
+        case "reset":
+          this.UI.menu.actions.style.display = "grid"
+          this.UI.menu.moves.style.display = "none"
+        break
+          
+        case "setDisable":
+          this.UI.menu.buttons.actions.forEach((button) => {
+            if(button) button.disabled = value
+          })
+        break
+          
+        case "moveList":
+          this.getMoveList()
+          
+          this.UI.menu.actions.style.display = "none"
+          this.UI.menu.moves.style.display = "grid"
+        break
+          
+        case "scan":
+          this.scanDigimon(this.enemySelected)
+        break
+      }
+    }
+    
+    scanDigimon(digimonToScan) {
+      this.API.post("/scan", { digimonToScan }).then( ({data}) => {
+        return this.updateUI()
+      })
+    }
+    
+    getMoveList() {
+      this.UI.menu.moves.innerHTML = ""
+
+      this.API.get("/moves").then( ({data}) => {
+        data.moves.forEach((move) => {
+          this.UI.menu.moves.innerHTML += `
+            <button id="BATTLE_MOVES" onmouseover="Battle.playButtonHoverSound()" class="battle-button" onclick="Battle.useMove('${move.name}')"><span class="ui-icon ui-icon-small ui-icon-element-${move.element.toLowerCase()}"></span> ${move.name}</button>
+          `
+        })
+      })
+    }
+
+    processRewards({ rewards, levelup, nextStage }) {
+      let rewardsList = ""
+      let characterLevelUpList = ""
+      let dropTypeList = []
+
+      rewards.forEach((drop, i) => {
+        const { type, amount } = drop
+
+        const dropIcons = {
+          bits: "ui-icon icon-bits ui-icon-small",
+          xp: "ui-icon ui-icon-experience ui-icon-small",
+          sExp: `ui-icon ui-icon-family-${drop.family} ui-icon-small`,
+          tamerExp: `ui-icon ui-icon-tamerExperience ui-icon-small`,
+          autoPlayTicket: "ui-icon ui-icon-autoplaycards"
+        }
+        
+        const dropImages = {}
+        
+        let dropText = {
+          bits: "Bits",
+          xp: "Digimon ExP",
+          sExp: `${drop.name} ExP`,
+          tamerExp: "Tamer ExP",
+          autoPlayTicket: "Auto Play Ticket"
+        }
+        
+        if(drop.type === "equipment" || drop.icon) {
+          dropText[drop.type] = drop.name
+          dropImages[drop.type] = `background-image: url(${drop.icon}) !important;`
+          //console.log(dropImages[drop.type])
+        }
+
+        /*rewardsList += `
+          <h3 style="text-transform: inherit; line-height: 1.5em;">
+            ${(dropIcons[type]) ? `<span class="${dropIcons[type]}"></span>` : ""} ${dropText[type]}: <p style="display: inline-flex; font-weight: 600;"> ${drop.amount}</p>
+          </h3>
+        `*/
+        
+        rewardsList += `
+          <div class="game-overlay-drop ${(type === "autoPlayTicket") ? "background-rarity-4": ""}" style="opacity: 0;" id="RW_MODAL_${i}">
+            <div class="game-overlay-drop-icon ${dropIcons[type]}" style="${(drop.type === "equipment" || drop.icon) ? dropImages[drop.type] : ""} background-size: 64px;"></div>
+            <div class="game-overlay-drop-title"><p>${drop.amount || 1}</p></div>
+          </div>
+        `
+        
+        dropTypeList.push(dropText[type])
+      })
+
+      characterLevelUpList = this.checkForLevelUp(levelup)
+      this.BETAMODAL({rewardsList, characterLevelUpList, nextStage, dropTypeList})
+      return
+      this.fireRewardsModal({rewardsList, characterLevelUpList, nextStage})
+    }
+    
+    BETAMODAL({rewardsList, characterLevelUpList, nextStage, dropTypeList}) {
+      const BUTTON_NEXT_STAGE = (nextStage) ? `<a onClick="Battle.nextStage('${nextStage}')" class="button blue animate__animated animate__fadeInUp" style="width: 148px; padding: 0 16px;"><i class="fa-solid fa-hand-point-right"></i> Next Stage</a>` : ""
+      const BUTTON_VIEW_MAP = `<a href=<%- (STAGE.battleType === "coliseum") ? "/coliseum" : "/campaign/adventure"%> class="button blue animate__animated animate__fadeInUp" style="width: 130px; padding: 0 16px;"><%- (STAGE.battleType === "coliseum") ? "go back" : '<i class="fa-solid fa-map-location-dot"></i> View Map'%></a>`
+      let BUTTON_REPEAT_STAGE = ""
+      <% if(!STAGE.bossStage && STAGE.battleType !=="coliseum") { %>
+        BUTTON_REPEAT_STAGE = `<a onClick="Battle.repeat()" class="button blue animate__animated animate__fadeInUp" style="width: 148px; padding: 0 16px;"><i class="fa-solid fa-repeat"></i> Repeat Stage</a>`
+      <% } %>
+      
+      var baseModal = `<div class="game-overlay animate__animated animate__fadeIn animate__faster" style="opacity: 0;">
+        <div class="game-overlay-content">
+          <h1 class="animate__animated animate__backInDown animate__fast">Victory!</h1>
+
+          <div class="game-overlay-drops">
+            ${rewardsList}
+          </div>
+
+          <div style="margin-top: 16px; display: flex; justify-content: center; gap: 8px;">
+            ${BUTTON_VIEW_MAP}
+            ${BUTTON_REPEAT_STAGE || ""}
+            ${BUTTON_NEXT_STAGE}
+          </div>
+        </div>
+      </div>`  
+
+      document.documentElement.style.overflow = 'hidden'
+      var test = document.createElement('div');
+      test.innerHTML = baseModal
+      window.document.body.insertBefore(test, window.document.body.firstChild);
+      
+      dropTypeList.forEach((drop, i) => {
+        tippy(`#RW_MODAL_${i}`,{
+          theme: "maintheme",
+          allowHTML: true,
+          interactive: true,
+          content: `
+            <p style="padding: 8px;">${drop}</p>
+          `
+        })
+        
+        const reward = document.getElementById(`RW_MODAL_${i}`)
+        
+        setTimeout(() => {
+          reward.style.opacity = 100
+          reward.classList.add("animate__animated", "animate__pulse")
+        }, 0.05 * (i*6000))
+        
+      })
+
+    }
+      
+    fireRewardsModal({rewardsList, characterLevelUpList, nextStage}) {
+      if(characterLevelUpList) this._wait(200, () => this.playLevelUpSound())
+      const nextStageButton = (nextStage) ? `<a onClick="Battle.nextStage('${nextStage}')" class="button blue" style="width: 148px; margin-top: 16px; padding: 0 16px; margin-left: 8px;"><i class="fa-solid fa-hand-point-right"></i> Next Stage</a>` : ""
+      
+      swal.fire(
+        {
+          width: "660px",
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          html: `
+            <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+              <h2 class="section-title"> Battle Result </h2>
+              <h4 class="section-subtitle text-green">VICTORY!</h4>
+              <div class="section-title-separator"></div>
+            </div>
+            
+            <img src="https://ik.imagekit.io/projectvoyage/Interface/ui_victory_r1MTjYTRw?ik-sdk-version=javascript-1.4.3&updatedAt=1671390286879" class="ui-icon-112" style="margin-bottom: 32px;"/>
+            <h3>Battle Rewards</h3>
+
+            <div class="battle-rewards">
+              ${rewardsList}
+              ${(characterLevelUpList) ? characterLevelUpList : ""}
+            </div>
+            
+            <div>
+              <a href=<%- (STAGE.battleType === "coliseum") ? "/coliseum" : "/campaign/adventure"%> class="button blue" style="width: 130px; margin-top: 16px; padding: 0 16px;"><%- (STAGE.battleType === "coliseum") ? "go back" : '<i class="fa-solid fa-map-location-dot"></i> View Map'%></a>
+              <% if(!STAGE.bossStage && STAGE.battleType !=="coliseum") { %>
+                <a onClick="Battle.repeat()" class="button blue" style="width: 148px; margin-top: 16px; padding: 0 16px; margin-left: 8px;"><i class="fa-solid fa-repeat"></i> Repeat Stage</a>
+              <% } %>
+              ${nextStageButton}
+            </div>
+          `
+        }
+      )
+    }
+
+    checkForLevelUp(levelup) {
+      if(!levelup || levelup.value) return
+      let levelUpList = ""
+
+      levelup.characters.forEach((char) => {
+        let stats = ""
+
+        Object.keys(char.stats).forEach((stat) => {
+          (stat !== "additional") ? (stats += `${stat}: ${char.oldStats[stat]} > ${char.stats[stat] + char.stats.additional[stat]}<br>`) : "No Level Up?"
+        })
+
+        levelUpList += `
+          <div style="margin-top: 16px;">
+            <h4>${char.nickname || char.species} Level'd Up!</h4>
+            <p>Level: ${char.level - 1} > ${char.level}</p>
+            <p>${stats}</p>
+          </div>
+        `
+      })
+
+      return levelUpList
+    }
+
+    checkForBattleEnd() {
+      this.API.get("/status").then(({ data }) => {
+        const { battle } = data
+        //console.log(battle)
+        
+        if(battle.finished) this._wait(1000, () => this.Audio.backgroundMusic.pause())
+        if(battle.finished && !battle.lost) {
+          this.playVictoryMusic()
+          this.processRewards(battle)
+        }
+        if(battle.lost) {
+          this.playDefeatMusic()
+          this.processLostBattle()
+        }
+        return battle.finished
+      })
+    }
+    
+    processLostBattle() {
+      swal.fire(
+        {
+          width: "660px",
+          showConfirmButton: false,
+          allowOutsideClick: false,
+          html: `
+            <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+              <h2 class="section-title"> Battle Result </h2>
+              <h4 class="section-subtitle text-red">DEFEAT!</h4>
+              <div class="section-title-separator"></div>
+            </div>
+            
+            <div class="battle-rewards" style="background-color: none;">
+              <img src="https://ik.imagekit.io/projectvoyage/Interface/ui_death_FUEc14UPp.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670865372339" class="ui-icon-112" style="margin-bottom: 16px;" />
+              <h2 style="margin-bottom: 16px;">Defeated</h2>
+              <p>All your digimons were defeated, Train them and Level Up them to make them Stronger.</p>
+            </div>
+            
+            <div>
+              <a href=<%- (STAGE.battleType === "coliseum") ? "/coliseum" : "/campaign/adventure"%> class="button blue" style="width: 130px; margin-top: 16px; padding: 0 16px;"><%- (STAGE.battleType === "coliseum") ? "Retreat" : '<i class="fa-solid fa-map-location-dot"></i> View Map'%></a>            
+            </div>
+          `
+        }
+      )
+    }
+    
+    // Re write
+    repeat() {
+      const thisStageId = "<%- STAGE.id %>"
+            
+      this.API.post("/create", {
+        stage: thisStageId
+      }).then(({ data }) => {
+        if(data.type === "redirect") location.href = `/battle/campaign/${thisStageId}`
+      })
+    }
+    
+    nextStage(stage) {
+      this.API.post("/create", {
+        stage
+      }).then(({ data }) => {
+        if(data.type === "redirect") location.href = `/battle/campaign/${stage}`
+      })
+    }
+    
+    updateUI() {
+      this.checkForBattleEnd()
+      this.displayTurn()
+      this.handleButtons("reset")
+    }
+    
+    /*
+    * Sounds
+    * functions wich play a specific sound.
+    */
+    
+    setButtonsSoundHandlers() {
+      this.UI.menu.buttons.actions.forEach((action) => {
+        if(action) {
+          action.addEventListener("click", this.playButtonClickSound)
+          action.addEventListener("mouseover", this.playButtonHoverSound)
+        }
+      })
+    }
+    
+    playBackgroundMusic() {
+      <%
+        const backgroundMusicList = [
+          "https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/Digimon%20world%20Dawn%E2%A7%B8Dusk%20music%20-%20Battle%20theme%201.mp4?v=1670814084450"
+        ]
+      
+        const bossBackgroundMusic = "https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/yt5s.com-Digimon%20world%20Dusk_Dawn%20music%20-%20Boss%20Battle%20theme(360p).mp4?v=1670860407154"
+        let randomBackgroundMusic = backgroundMusicList[Math.floor(Math.random() * backgroundMusicList.length)]
+        if(STAGE.battleType === "coliseum") randomBackgroundMusic = "https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/Digimon%20World_%20Next%20Order%20OST%20%2316%20-%20Digital%20Pulse%20(320%20kbps).mp3?v=1689092052251"
+        if(STAGE.data && STAGE.data.backgroundMusic) randomBackgroundMusic = STAGE.data.backgroundMusic
+      %>
+      
+      this.Audio.backgroundMusic = new Audio("<%- (STAGE.bossStage) ? bossBackgroundMusic : randomBackgroundMusic %>")
+      this.Audio.backgroundMusic.volume = 0.5
+      this.Audio.backgroundMusic.loop = true
+      this.Audio.backgroundMusic.play()
+    }
+    
+    playHitSound() {
+      const sounds = ["https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/011.wav?v=1670811667375","https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/012.wav?v=1670811668230"]
+      const Sound = new Audio(sounds[Math.floor( Math.random() * sounds.length )])
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    playButtonClickSound() {
+      const Sound = new Audio("https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/001.wav?v=1670812772865")
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    playButtonHoverSound() {
+      const Sound = new Audio("https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/000.wav?v=1670813227470")
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    playDeathSound() {
+      const Sound = new Audio("https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/027.wav?v=1670862511813")
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    playVictoryMusic() {
+      const Sound = new Audio("https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/33.mp3?v=1670863018375")
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    playDefeatMusic() {
+      const Sound = new Audio("https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/35.mp3?v=1670866524159")
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    playLevelUpSound() {
+      const Sound = new Audio("https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/006.wav?v=1670866740510")
+      Sound.volume = 0.5
+      Sound.play()
+    }
+    
+    /*
+    * Main
+    * Important functions
+    */
+    
+    _log(props) {
+      if(this.DEBUG) console.log(props)
+    }
+    
+    _wait(ms, func) {
+      setTimeout(func, ms)
+    }
+  }
+
+  const Battle = new BattleHelper()
+  
+  <% for(let i=0; i< STAGE.enemies.length; i++) { %>
+    Battle.createHealthbar("enemy", "<%- i %>", <%- JSON.stringify({ health: _BATTLE.data.enemies[i].health, maxHealth: 2 * (_BATTLE.data.enemies[i].stats.health)}) %>)
+    Battle.createDamageCounter("enemy", document.getElementById("battle-damagedisplay<%- i %>"))
+    Battle.createBattleSelectors(<%- i %>, document.getElementById("battle-select<%- i %>"))  
+    Battle.createCharacterSprites("enemy", document.getElementById("battle-enemy<%- i %>"))
+                                    
+    <% console.log(_BATTLE.data.enemies[i].health) %>
+    Battle.checkIfDigimonIsDead("enemy", <%- i %>, <%- _BATTLE.data.enemies[i].health %>, true)
+  <% } %>
+    
+  <% for(let i=0; i< userData.modules.party.length; i++) { %>
+    Battle.createHealthbar("party", "<%- i %>", <%- JSON.stringify({ health: _BATTLE.data.party[i].health, maxHealth: 2 * (_BATTLE.data.party[i].stats.health + _BATTLE.data.party[i].stats.additional.health)}) %>)
+    Battle.createDamageCounter("party", document.getElementById("battle-damagepartydisplay<%- i %>"))
+    Battle.createCharacterSprites("party", document.getElementById("battle-digimon<%- i %>"))
+  
+    Battle.checkIfDigimonIsDead("party", <%- i %>, <%- _BATTLE.data.party[i].health %>, true)
+  <% } %>
+    
+  Battle.updateUI()
+</script>
+
+clear()

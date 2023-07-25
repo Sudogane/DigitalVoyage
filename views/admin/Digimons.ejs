@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digimon Voyage | Digibank</title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digimon Voyage is a brand-new browser game inspired by the Digimon Series, Join-us and start your brand new Digital Adventure right now, the Digital World calls for you, Digidestined!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digimon.Voyage: Season One">
+  <meta property="og:title" content="Digimon Voyage - A Brand new Digimon Browser-RPG">
+  <meta property="og:description" content="A Brand new Digimon Browser Game, Join-us today and start your Digital Adventure as an Digidestined!">
+  <meta property="og:image" content="https://i.pinimg.com/originals/72/e8/60/72e86064ed10bf33500599d00e2aae08.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body>
+	<!-- NAVIGATION WRAP -->
+	<%- include('../../partials/navbar') %>
+	<!-- /NAVIGATION WRAP -->
+    
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+
+    <!-- Mobile User Banner-->
+    <%- include("../../partials/tamer/banner")%>
+    <!-- Mobile User Banner-->
+      
+		<!-- LIVE NEWS WIDGET WRAP -->
+		<%- include("../../partials/livenews") %>
+			<!-- /LIVE NEWS WIDGET WRAP -->
+
+			<!-- LAYOUT CONTENT FULL -->
+			<div class="layout-content-1 layout-item-3-1 grid-limit">
+				<!-- LAYOUT BODY -->
+				<div class="layout-body layout-item layout-item-body">
+					<!-- WIDGET ITEM -->
+					<div class="widget-item">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap blue">
+							<h2 class="section-title medium layout-item-title"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_digibank.png?v=1665508150671">  Digimon
+                <span style="float: right; margin-right: 16px; margin-top: 2%;"><%- digimons.length %> Species registered</span>
+              </h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->
+					</div>
+					<!-- /WIDGET ITEM -->
+              
+        <!-- LAYOUT ITEM -->
+        <div class="layout-item centered">
+          <a onclick="addSpecies()" class="button blue small" style="padding: 0 24px;"><i class="fa-solid fa-square-plus"></i> Add Species</a>
+          <div class="grid-4col_1" style="margin-left: 95px; margin-bottom: 32px;">
+
+            <% digimons.sort((a, b) => a.id - b.id).forEach((digimon) => { %>
+                      <!-- DIGIMON PREVIEW -->
+                      <div class="product-preview small" style="text-align:center;">
+                        <!-- DIGIMON PREVIEW IMG WRAP -->
+                        <div class="product-preview-img-wrap" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                          <!-- DIGIMON PREVIEW IMG -->
+                          <a onclick='digimonInfoModal(<%- digimon.id %>)'>
+                            <figure class="product-preview-img box_digimon">
+                              <img style="width: fit-content; max-width: 82px; max-height: 82px;" src="<%- digimon.sprite %>" alt="<%- digimon.species %>">
+                            </figure>
+                          </a>
+                          <!-- /DIGIMON PREVIEW IMG -->
+                        </div>
+                        <!-- /DIGIMON PREVIEW IMG WRAP -->
+                        <p style="margin-top: 8px;"><b><%- digimon.species%></b><br></p>
+                      </div>
+                      <!-- /DIGIMON PREVIEW -->
+            <% }) %>
+            
+          </div>
+        </div>
+        <!-- /LAYOUT ITEM -->
+				</div>
+				<!-- /LAYOUT BODY -->
+
+				<!-- LAYOUT SIDEBAR 2 -->
+				<div class="layout-sidebar2 layout-item gutter-medium">
+          <!-- WIDGET SIDEBAR -->
+          <%- include("../../partials/tamer/sidebar/tamer") %>
+          <%- include("../../partials/tamer/sidebar/my_team") %>
+					<!-- /WIDGET SIDEBAR -->
+				</div>
+				<!-- /LAYOUT SIDEBAR 2 -->
+			</div>
+			<!-- LAYOUT CONTENT FULL -->
+
+			<%- include("../../partials/footer") %>
+      <%- include("../../functions/main") %>
+
+				<!-- app bundle -->
+				<script src="/app.bundle.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+				<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+        
+        <script>
+          let digimons = <%- JSON.stringify(digimons) %>
+          const ADMIN = axios.create({
+            baseURL: `${window.location.origin}/api/adminbureau` 
+          })
+              
+          function registerNewSpecies() {
+            const fields = ["species", "sprite", "description", "form", "attribute", "element", "family", "health", "mana", "attack", "defense", "speed", "moves"]
+            let values = {}
+            
+            fields.forEach(field => {
+              let fieldValue = document.getElementById(field).value
+              values[field] = fieldValue
+            })
+            
+            ADMIN.post("/addSpecies", values)
+          }
+              
+          function addSpecies() {
+            Swal.fire({
+              padding: "0px",
+              title: `<h2 class="section-title small">Register a new Species</h2><div class="section-title-separator"></div>`,
+              customClass: {
+                title: "section-title-wrap blue"
+              },
+              allowOutsideClick: true,
+              allowEscapeKey: true,
+              showConfirmButton: false,
+              html: `
+                  <div class="form-wrap">
+                    <!-- FORM ROW -->
+                    <div class="form-row">
+                      <!-- FORM ITEM -->
+                      <div class="form-item blue">
+                        <label for="species" class="rl-label">Species Name</label>
+                        <input type="text" id="species" placeholder="Chicchimon" minlength="1">
+                        
+                        <label for="sprite" class="rl-label">Sprite URL</label>
+                        <input type="text" id="sprite" placeholder="https://vignette.wikia.nocookie.net/digimon/images/f/f2/Chicchimon_vg.gif" minlength="1">
+                        
+                        <label for="description" class="rl-label">Description</label>
+                        <input type="text" id="description" placeholder="Wikimon description." minlength="1">
+                        
+                        <label for="form" class="rl-label">Form</label>
+                        <input type="text" id="form" placeholder="In-Training" minlength="1">
+                        
+                        <label for="attribute" class="rl-label">Attribute</label>
+                        <input type="text" id="attribute" placeholder="None" minlength="1">
+                        
+                        <label for="element" class="rl-label">Element</label>
+                        <input type="text" id="element" placeholder="Light" minlength="1">
+                        
+                        <label for="family" class="rl-label">Family</label>
+                        <input type="text" id="family" placeholder="Wind Guardians" minlength="1">
+                        
+                        <label for="health" class="rl-label">Base Health</label>
+                        <input type="text" id="health" placeholder="10" minlength="1">
+                        
+                        <label for="defense" class="rl-label">Base Defense</label>
+                        <input type="text" id="defense" placeholder="10" minlength="1">
+                        
+                        
+                        <label for="mana" class="rl-label">Base Mana</label>
+                        <input type="text" id="mana" placeholder="20" minlength="1">
+                        
+                        <label for="attack" class="rl-label">Base Attack</label>
+                        <input type="text" id="attack" placeholder="30" minlength="1">
+                        
+                        <label for="speed" class="rl-label">Base Speed</label>
+                        <input type="text" id="speed" placeholder="40" minlength="1">
+                        
+                        <label for="moves" class="rl-label">Moves (Separadted by ,)</label>
+                        <input type="text" id="moves" name="addDigimonEvoId" placeholder="Charge, Pedir Socorro, Sentir o Shadow" minlength="1">
+                      </div>
+                      <!-- /FORM ITEM -->
+                    </div>
+                    <!-- /FORM ROW -->
+
+                    <!-- FORM ACTIONS -->
+                    <div class="form-actions full">
+                      <!-- BUTTON -->
+                      <button id="addDigimonEvoIdButton" onclick="registerNewSpecies()" class="button blue" style="margin-bottom: 8px;">
+                        Continue
+                        <!-- BUTTON ORNAMENT -->
+                        <span class="button-ornament">
+                          <!-- ARROW ICON -->
+                          <svg class="arrow-icon medium">
+                            <use xlink:href="#svg-arrow-medium"></use>
+                          </svg>
+                          <!-- /ARROW ICON -->
+
+                          <!-- CROSS ICON -->
+                          <svg class="cross-icon small">
+                            <use xlink:href="#svg-cross-small"></use>
+                          </svg>
+                          <!-- /CROSS ICON -->
+                        </span>
+                        <!-- /BUTTON ORNAMENT -->
+                      </button>
+                      <!-- /BUTTON -->
+                    </div>
+                    <!-- /FORM ACTIONS -->
+                  </div>
+                  <!-- /FORM WRAP -->
+            `
+            })
+          }
+          
+          function digimonInfoModal(id) {
+            const digimon = digimons.filter(d => d.id === id)[0]
+            Swal.fire({
+              padding: "0px",
+              title: `<h2 class="section-title small">${digimon.species}</h2><div class="section-title-separator"></div>`,
+              customClass: {
+                title: "section-title-wrap blue"
+              },
+              allowOutsideClick: true,
+              allowEscapeKey: true,
+              showConfirmButton: false,
+              html: `
+              <p>Id: ${digimon.id}</p>
+              <p>Form: ${digimon.form}</p>
+              <p>Attribute: ${digimon.attribute}</p>
+              <p>Family: ${digimon.family}</p>
+              <p>Element: ${digimon.element}</p>
+              <p>Evolves To: ${digimon.evos?.to.join(", ") || ""}</p>
+              <p>Evolves From: ${digimon.evos?.from.join(", ") || ""}</p>
+              <p><b>Base Stats:</b>
+                <br>
+                ${Object.keys(digimon.stats).map(stat => `${stat}: ${digimon.stats[stat]}`).join("<br>")}
+              </p>
+              
+              <div>
+                <a onclick="openAddEvoModal(${digimon.id}, '${digimon.species}')" class="button blue small" style="padding: 0 24px;"><i class="fa-solid fa-square-plus"></i> Add Evolution</a>
+              </div>
+            `
+            })
+          }
+          
+          function openAddEvoModal(id, species) {
+            Swal.fire({
+              padding: "0px",
+              title: `<h2 class="section-title small">${species} Add Evolution</h2><div class="section-title-separator"></div>`,
+              customClass: {
+                title: "section-title-wrap blue"
+              },
+              allowOutsideClick: true,
+              allowEscapeKey: true,
+              showConfirmButton: false,
+              html: `
+                  <div class="form-wrap">
+                    <!-- FORM ROW -->
+                    <div class="form-row">
+                      <!-- FORM ITEM -->
+                      <div class="form-item blue">
+                        <label for="addDigimonEvoId" class="rl-label">The new Evolution species/id</label>
+                        <input type="text" id="addDigimonEvoId" name="addDigimonEvoId" placeholder="Koromon/1" minlength="1">
+                      </div>
+                      <!-- /FORM ITEM -->
+                    </div>
+                    <!-- /FORM ROW -->
+
+                    <!-- FORM ACTIONS -->
+                    <div class="form-actions full">
+                      <!-- BUTTON -->
+                      <button id="addDigimonEvoIdButton" onclick="addEvo(${id})" class="button blue" style="margin-bottom: 8px;">
+                        Continue
+                        <!-- BUTTON ORNAMENT -->
+                        <span class="button-ornament">
+                          <!-- ARROW ICON -->
+                          <svg class="arrow-icon medium">
+                            <use xlink:href="#svg-arrow-medium"></use>
+                          </svg>
+                          <!-- /ARROW ICON -->
+
+                          <!-- CROSS ICON -->
+                          <svg class="cross-icon small">
+                            <use xlink:href="#svg-cross-small"></use>
+                          </svg>
+                          <!-- /CROSS ICON -->
+                        </span>
+                        <!-- /BUTTON ORNAMENT -->
+                      </button>
+                      <!-- /BUTTON -->
+                    </div>
+                    <!-- /FORM ACTIONS -->
+                  </div>
+                  <!-- /FORM WRAP -->
+            `
+            })
+          }
+          
+          function addEvo(originalDigimonId) {
+            const field = document.getElementById("addDigimonEvoId")
+            const fieldValue = field.value
+            
+            ADMIN.post("/addEvo", {originalDigimonId, id: fieldValue, type: "to"})
+            
+            Toastify({
+              escapeMarkup: false,
+              text: "<h4>Evolução Adicionada, feche este dialogo!</h4>",
+              duration: 3000,
+              close: false,
+              gravity: "top",
+              position: "center", 
+              stopOnFocus: false,
+              className: "app-toast"
+            }).showToast()   
+          }
+          
+        </script>
+</body>
+
+</html>

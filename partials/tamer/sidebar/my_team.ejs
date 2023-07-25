@@ -1,0 +1,84 @@
+					<% if (userData.newAccount === 3 && userData.modules.party.length !== 0) {%>
+					  <div class="widget-sidebar">
+							<!-- SECTION TITLE WRAP -->
+							<div class="section-title-wrap green">
+								<h2 class="section-title medium widget-sidebar-title">
+									<img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_myTeam.png?v=1665342182620"> My Team
+								  
+                  <%
+                    let PartyPower = 0;  
+                    
+                    for(var i=0; i< userData.modules.party.length; i++) {
+                      const thisMon = userData.modules.party[i]
+                      Object.keys(thisMon.stats).forEach(stat => {
+                        if(stat === "additional") return
+                        PartyPower += thisMon.stats[stat] + thisMon.stats.additional[stat]
+                      })
+                    }
+                  
+                    PartyPower = Math.floor(PartyPower / 8.5)
+                  %>
+                    
+                  <div style="text-align: right; float: right; margin-top: 4px; margin-right: 24px;"><%- PartyPower %> PP</div>
+                </h2>
+								<div class="section-title-separator"></div>
+							</div>
+							<!-- /SECTION TITLE WRAP -->
+              
+							<!--  MY TEAM PREVIEW -->
+              <div class="widget-sidebar-body party-background">
+                <div class="party-body">
+                  <div class="inventory-items-preview" style="margin-top: 48px; margin-bottom: 48px;">
+                    <% for (var i=0; i < 3;  i++ ) { %>
+                      <% if(userData.modules.party[i]) { %>
+                        <!-- MY TEAM DIGIMON PREVIEW -->
+                        <div class="inventory-item-preview">
+                          <!-- DIGIMON PREVIEW -->
+                          <div class="product-preview small" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                            <!-- DIGIMON PREVIEW IMG WRAP -->
+                            <div class="product-preview-img-wrap">
+                              <!-- DIGIMON PREVIEW IMG -->
+                              <a id="party-box-<%- userData.modules.party[i]._id %>" href="/digibank/<%- userData.modules.party[i]._id %>">
+                                <figure class="product-preview-img box_digimon <%- (userData.modules.party[i].health === 0) ? 'battle-defeated' : ''%>">
+                                  <img style="width: fit-content; max-width: 82px; max-height: 82px;" src="<%- userData.modules.party[i].sprite %>" alt="<%- userData.modules.party[i].species %>">
+                                </figure>
+                              </a>
+                              <!-- /DIGIMON PREVIEW IMG -->
+                            </div>
+                            <!-- /DIGIMON PREVIEW IMG WRAP -->
+                          </div>
+                          <!-- /DIGIMON PREVIEW -->
+                          <div class="party-progressbar"><div id="party-healthbar<%- i %>"></div></div>
+                          <div class="party-progressbar" style="margin-top: -8px;"><div id="party-expbar<%- i %>"></div></div>
+                        </div>
+                        <!-- /MY TEAM DIGIMON PREVIEW -->
+                      <% } else { %>
+                        <!-- MY TEAM DIGIMON PREVIEW -->
+                        <div class="inventory-item-preview empty party-preview" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                          <!-- NO DIGIMON ICON -->
+                          <div class="party-preview-nodigimon"></div>
+                          <!-- /NO DIGIMON ICON -->
+                        </div>
+                        <!-- /MY TEAM DIGIMON PREVIEW -->
+                      <% } %>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+							<!-- /MY TEAM PREVIEW -->
+                    
+              <%
+                let _lowHealthFilter = userData.modules.party.filter((digimon) => (digimon.health/ ( 2* (digimon.stats.health + digimon.stats.additional.health) ) * 100) <= 90)
+                if(_lowHealthFilter?.[0]) {
+              %>
+                <div class="lowhealth-warning">
+                  <% if(locals.STAGE) { %>
+                    <p style="text-align: center;">Your partners are low on health, but you can't go to the hospital right now.</p>
+                  <% } else { %>
+                    <p style="text-align: center;">Your Digimon are low on health, <a onclick="_openHospital()"><strong class="text-yellow">click here</strong></a> to go to the hospital!</p>
+                  <% } %>
+                </div>
+              <% } %>
+                    
+						</div>
+					<% } %>

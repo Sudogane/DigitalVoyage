@@ -1,0 +1,79 @@
+<div class="table">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Stats</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row big" style="display: table-cell; padding: 16px;">
+                          <div class="column">
+                            <div class="ui-icon-wrap">
+                              <span class="ui-icon ui-icon-health"></span>
+                              <h4 style="text-transform: inherit">
+                                Health <p style="font-weight: 600;">
+                                <%- Math.floor( digimonData.stats.health + digimonData.stats.additional.health )%> <span class="text-yellow">(+<%- digimonData.stats.additional.health %>)</span>
+                              </p>
+                              </h4>
+                            </div>
+                            
+                            <div class="ui-icon-wrap" style="margin-top: 8px;">
+                              <span class="ui-icon ui-icon-mana"></span>
+                              <h4 style="text-transform: inherit">
+                                Mana <p style="font-weight: 600;">
+                                <%- Math.floor( digimonData.stats.mana + digimonData.stats.additional.mana )%> <span class="text-yellow">(+<%- digimonData.stats.additional.mana %>)</span>
+                              </p>
+                              </h4>
+                            </div>
+                            
+
+                            <div class="ui-icon-wrap" style="margin-top: 8px;">
+                              <span class="ui-icon ui-icon-attack"></span>
+                              <h4 style="text-transform: inherit">
+                                Attack <p style="font-weight: 600;">
+                                <%- Math.floor( digimonData.stats.attack + digimonData.stats.additional.attack )%> <span class="text-yellow">(+<%- digimonData.stats.additional.attack %>)</span>
+                              </p>
+                              </h4>
+                            </div>
+
+
+                            <div class="ui-icon-wrap" style="margin-top: 8px;">
+                              <span class="ui-icon ui-icon-defense"></span>
+                              <h4 style="text-transform: inherit">
+                                Defense <p style="font-weight: 600;">
+                                <%- Math.floor( digimonData.stats.defense + digimonData.stats.additional.defense )%> <span class="text-yellow">(+<%- digimonData.stats.additional.defense %>)</span>
+                              </p>
+                              </h4>
+                            </div>
+                            
+                            <div class="ui-icon-wrap" style="margin-top: 8px;">
+                              <span class="ui-icon ui-icon-speed"></span>
+                              <h4 style="text-transform: inherit">
+                                Speed <p style="font-weight: 600;">
+                                <%- Math.floor( digimonData.stats.speed + digimonData.stats.additional.speed )%> <span class="text-yellow">(+<%- digimonData.stats.additional.speed %>)</span>
+                              </p>
+                              </h4>
+                            </div>
+                              
+                            <div class="ui-icon-wrap" style="margin-top: 8px;">
+                              <span class="ui-icon ui-icon-speed"></span>
+                              <h4 style="text-transform: inherit">
+                                Critical Rate/Critical Damage <p style="font-weight: 600;">
+                                  <%- digimonData.stats.additional.critical.rate || 0.0 %>%/<%- digimonData.stats.additional.critical.damage || 0 %>%
+                                </p>
+                              </h4>
+                            </div>
+                            
+                                
+                          </div>
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>

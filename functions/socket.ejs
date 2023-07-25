@@ -1,0 +1,15 @@
+<script>
+  const socket = io(window.location.origin, {transports: ['websocket']})
+  
+  <% if(locals.userData) { %>
+    socket.emit("online", {userId: <%- userData.id %>})
+                           
+    socket.on("oi", () => {
+      console.log("OI")
+    })
+                           
+    window.addEventListener("beforeunload", function(e){
+       socket.emit("offline", {userId: <%- userData.id %>})
+    }, false)
+  <% } %>
+</script>

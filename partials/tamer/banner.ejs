@@ -1,0 +1,43 @@
+<div class="banner-user" style="background-image: url(https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/image_b8NBFWN9V.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670555150152); background-position: center;">
+			<div class="banner-content">
+				<div class="media">
+					<div class="item-img">
+						<a>
+							<img loading="lazy"
+								src="<%- (costume) ? costume.avatarUrl : 'https://ik.imagekit.io/projectvoyage/Avatars/no_avatar_FN9kIV-JZ.png?ik-sdk-version=javascript-1.4.3&updatedAt=1666195502480' %>"
+								class="avatar user-1-avatar avatar-150 photo" width="150" height="150"> </a>
+					</div>
+					<div class="media-body">
+						<h3 class="item-title">
+							<%- userData.username %>
+						</h3>
+						<p class="item-subtitle">
+              Novice Tamer
+						</p>
+						<ul class="item-social">
+							<li><a onclick="mobileOpenPartyModal()"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/menu_digibank.png?v=1664640432730" style="width: 56px;"></a></li>
+              <li>
+                <a href="/inventory"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/menu_inventory.png?v=1664640432730" style="width: 56px;"></a>
+              </li>
+              <li>
+                <a><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/menu_dailyLogin.png?v=1664640432730" style="width: 56px;"></a>
+              </li>
+              <li>
+                <a href="/campaign/adventure"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/menu_map.png?v=1665096632321" style="width: 56px;"></a>
+              </li>
+						</ul>
+						<ul class="user-meta">
+							<li>
+								<h3><span class="icon-bits"></span> Bits: <p style="display: inline-flex; font-weight: 600;"> <%- new Intl.NumberFormat('de-DE').format(userData.modules.BITS) %> </p></h3>
+							</li>
+							<li>
+								<h3><span class="icon-data"></span> Data: <p style="display: inline-flex; font-weight: 600;"> <%- new Intl.NumberFormat('de-DE').format(userData.modules.DATA) %> </p></h3>
+							</li>
+							<li>
+								<h3><span class="icon-yen"></span> Yen: <p style="display: inline-flex; font-weight: 600;"> <%- new Intl.NumberFormat().format(userData.modules.YEN) %> </p></h3>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>

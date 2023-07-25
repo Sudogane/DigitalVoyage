@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digital Voyage | Digibank</title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digital Voyage is a brand-new browser, Join-us and start your brand new Digital Adventure right now, the Digital Universe calls for you, Voyager!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digital.Voyage: Season One">
+  <meta property="og:title" content="Digital Voyage - A Brand new Virtual Monster Browser-RPG">
+  <meta property="og:description" content="🎮 Embark on a thrilling Digital Voyage as a Digital Explorer in our exciting new Browser Game! 🌟 Join-us now to explore the world of Digital Voyage🎲🐾, where you'll encounter Virtual Monsters, Bosses, and Lots of Fun. 🤖🔍 Become a Voyager and start your epic journey today! 🚀💫 Don't miss out on this captivating experience! Play now and embrace the excitement! 🎉🌌 Art By: thatsquirrelly">
+  <meta property="og:image" content="https://img3.gelbooru.com//samples/19/ee/sample_19ee0fa08b4a12c8bfc94d594f16690f.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body>
+	<!-- NAVIGATION WRAP -->
+	<%- include('../../partials/navbar') %>
+	<!-- /NAVIGATION WRAP -->
+    
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+
+    <!-- Mobile User Banner-->
+    <%- include("../../partials/tamer/banner")%>
+    <!-- Mobile User Banner-->
+      
+		<!-- LIVE NEWS WIDGET WRAP -->
+		<%- include("../../partials/livenews") %>
+			<!-- /LIVE NEWS WIDGET WRAP -->
+
+			<!-- LAYOUT CONTENT FULL -->
+			<div class="layout-content-1 layout-item-3-1 grid-limit">
+				<!-- LAYOUT BODY -->
+				<div class="layout-body layout-item layout-item-body">
+          
+          <% if(!locals.digimonData) { %>
+					<!-- WIDGET ITEM -->
+					<div class="widget-item">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap blue">
+							<h2 class="section-title medium layout-item-title"><img width=40 height=40 src="https://ik.imagekit.io/projectvoyage/Interface/ui_scan_yRcxrOVec.png?updatedAt=1683830108428"> Scans</h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->
+					</div>
+					<!-- /WIDGET ITEM -->
+          
+          <div class="grid-5col_1 centered no-gutter" style="display: flex; justify-content: center; flex-wrap: wrap; background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/asddsa_3djDn8sRq.png?updatedAt=1683806407009');  background-position: center; margin-top: -32px; padding: 48px; margin-bottom: -24px;">
+            <% 
+              let sortedScans = []
+               
+              for(var digimon in locals.scans) {
+               sortedScans.push([digimon, locals.scans[digimon]])
+              }
+              
+              sortedScans.sort((a, b) => {
+                return b[1].scanAmount - a[1].scanAmount
+              })
+            %>
+              
+            <% sortedScans.forEach((digimon) => { %>
+                      <!-- DIGIMON PREVIEW -->
+                      <div class="product-preview small" style="text-align:center; margin-left: 16px; margin-bottom: 8px;">
+                        <!-- DIGIMON PREVIEW IMG WRAP -->
+                        <div class="product-preview-img-wrap" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+                          <!-- DIGIMON PREVIEW IMG -->
+                          <a>
+                            <figure class="product-preview-img box_digimon">
+                              <img style="width: fit-content; max-width: 82px; max-height: 82px;" src="<%- digimon[1].sprite %>" alt="<%- digimon[0] %>">
+                            </figure>
+                          </a>
+                          <!-- /DIGIMON PREVIEW IMG -->
+                        </div>
+                        <!-- /DIGIMON PREVIEW IMG WRAP -->
+                        <p style="margin-top: 8px;"><b><%- digimon[0] %></b><br><span class="<%- ( digimon[1].scanAmount >= 100 ) ? 'text-green' : 'text-red' %>"><%- digimon[1].scanAmount%>%</span></p>
+                        <a style="margin-bottom: 16px;" onclick="createDigimon('<%- digimon[0] %>')" class="button blue small <%- (digimon[1].scanAmount >= 100 && userData.modules.digibank.length !== userData.modules.capacities.digibank) ? "" : 'disabled' %>" style="margin-top: 8px; padding: 0 24px;">Digitalize</a>
+                      </div>
+                      <!-- /DIGIMON PREVIEW -->
+            <% }) %>
+          </div>
+          
+
+          <% } %>
+          
+					<!-- WIDGET ITEM -->
+					<div class="widget-item">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap blue">
+							<h2 class="section-title medium layout-item-title"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_digibank.png?v=1665508150671">  Digibank 
+                
+                <% if(locals.digimonData) { %>
+                  - <%- digimonData.species %>
+                <% } %>
+                  
+                <span style="float: right; margin-right: 16px; margin-top: 2%;"><%- userData.modules.digibank.length %>/<%- userData.modules.capacities.digibank %></span>
+                
+              </h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->
+					</div>
+					<!-- /WIDGET ITEM -->
+          <% if(locals.digimonData) { %>
+            <div style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; border-radius: 0px;background-position: center; background-image: url(https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/dazhaodi.jpg?v=1665511760826); background-size: cover; height: 350px; display: flex; justify-content: center; flex-wrap: wrap; align-content: center; margin-top: -32px;">
+              <div style="height: 350px;  width: 800px; position: absolute;">
+                <div  style="text-align: center; position: absolute; left: 0px; margin-top: 16px;">
+                  <%- (digimonData.locked) ? '<span class="ui-icon ui-icon-locked ui-icon-40"></span>' : ""%>
+                </div>
+
+                <div  style="text-align: center; position: absolute; right: 0px; margin-top: 16px;">
+                  <div class="digibank-itemslot" id="equiped_item">
+                    <%- (digimonData.equipment && Object.keys(digimonData.equipment).length) ? `<img src=${digimonData.equipment.icon} style="max-width:64px">` : "" %>
+                  </div>
+                </div>
+              </div>
+                
+              <div class="grid-2col_1" style="display: block">
+                    <!-- COLUMN -->
+                    <div class="column" style="text-align: center;">
+                      <div style="align-items: center;">
+                        <h3 style="display: inline; text-transform: inherit; color: white; text-shadow: rgb(0 0 0) 0px 2px 4px;">
+                          <%- digimonData.nickname || digimonData.species %>
+                        </h3>
+                        <a id="changeDigimonNickname" class="button tiny blue" style="position: absolute; margin-left: 4px; padding: 0 8px; text-shadow: none;">
+                          <i class="fa-solid fa-pencil"></i>
+                        </a>
+                      </div>
+                      <p  style="font-weight: bolder; color: #dee807; text-shadow: rgb(0 0 0) 0px 2px 2px;"><%- Math.floor((digimonData.stats.health + digimonData.stats.additional.health + digimonData.stats.speed + digimonData.stats.additional.speed + digimonData.stats.attack + digimonData.stats.additional.attack + digimonData.stats.mana + digimonData.stats.additional.mana + digimonData.stats.defense + digimonData.stats.additional.defense) / 8.5) %> Power</p>
+                    </div>
+                    <!-- /COLUMN -->
+
+                    <!-- COLUMN -->
+                    <div class="column" style="display: flex; justify-content: center; margin-top: 16px;">
+                      <img src="<%- digimonData.sprite %>" class="<%- (digimonData.health === 0) ? 'battle-defeated' : ''%>">
+                    </div>
+                    <!-- /COLUMN -->
+              </div>
+            </div>
+              
+      <!-- TAB WRAP -->
+      <div id="digimon-digibank-tab-wrap" class="tab-wrap">
+        <!-- TAB HEADER -->
+        <div class="tab-header items-6">
+          <!-- TAB HEADER ITEM -->
+          <div class="tab-header-item blue">
+            <!-- TAB HEADER ITEM TEXT -->
+            <p class="tab-header-item-text">Details</p>
+            <!-- /TAB HEADER ITEM TEXT -->
+          </div>
+          <!-- /TAB HEADER ITEM -->
+
+          <!-- TAB HEADER ITEM -->
+          <div class="tab-header-item blue">
+            <!-- TAB HEADER ITEM TEXT -->
+            <p class="tab-header-item-text">Stats</p>
+            <!-- /TAB HEADER ITEM TEXT -->
+          </div>
+          <!-- /TAB HEADER ITEM -->
+          
+          <!-- TAB HEADER ITEM -->
+          <div class="tab-header-item blue">
+            <!-- TAB HEADER ITEM TEXT -->
+            <p class="tab-header-item-text">Moves</p>
+            <!-- /TAB HEADER ITEM TEXT -->
+          </div>
+          <!-- /TAB HEADER ITEM -->
+
+          <!-- TAB HEADER ITEM -->
+          <div class="tab-header-item blue">
+            <!-- TAB HEADER ITEM TEXT -->
+            <p class="tab-header-item-text">Species Exp</p>
+            <!-- /TAB HEADER ITEM TEXT -->
+          </div>
+          <!-- /TAB HEADER ITEM -->
+          
+          <!-- TAB HEADER ITEM -->
+          <div class="tab-header-item blue">
+            <!-- TAB HEADER ITEM TEXT -->
+            <p class="tab-header-item-text">Evolution</p>
+            <!-- /TAB HEADER ITEM TEXT -->
+          </div>
+          <!-- /TAB HEADER ITEM -->
+          
+          <!-- TAB HEADER ITEM -->
+          <div class="tab-header-item blue">
+            <!-- TAB HEADER ITEM TEXT -->
+            <p class="tab-header-item-text">Degeneration</p>
+            <!-- /TAB HEADER ITEM TEXT -->
+          </div>
+          <!-- /TAB HEADER ITEM -->
+        </div>
+        <!-- /TAB HEADER -->
+
+        <!-- TAB BODY -->
+        <div class="tab-body">
+          <!-- TAB ITEM -->
+          <div class="tab-item">
+            <div style="display: flex; justify-content: center; margin-bottom: 24px;">
+              <% if(!locals.isOnParty && userData.modules.party.length < 3) { %>
+                <a onclick="addToParty('<%- digimonData._id %>')" class="button blue small" style="padding: 0 24px;"><i class="fa-solid fa-square-plus"></i> Add to party</a>
+              <% } %>
+              
+              <% if(locals.isOnParty && userData.modules.party.length > 1 ) { %>
+                <a onclick="removeFromParty('<%- digimonData._id %>')" class="button blue small" style="padding: 0 24px; margin-left: 8px;"><i class="fa-solid fa-square-minus"></i> Remove from party</a>
+              <% } %>
+                
+              <% if(!digimonData.locked) { %>
+                <a onclick="release('<%- digimonData._id %>')" class="button blue small" style="padding: 0 24px; margin-left: 8px;"><i class="fa-solid fa-eraser"></i> Release Digimon</a>
+              <% } %>
+                              
+              <a onclick="" class="button blue small" style="padding: 0 24px; margin-left: 8px;">Rename Digimon</a>
+            </div>
+            <%- include("../../partials/digibank/details") %>
+          </div>
+          <!-- /TAB ITEM -->
+
+          <!-- TAB ITEM -->
+          <div class="tab-item">
+            <%- include("../../partials/digibank/stats") %>
+          </div>
+          <!-- /TAB ITEM -->
+
+          <!-- TAB ITEM -->
+          <div class="tab-item">
+            <%- include("../../partials/digibank/moves") %>
+          </div>
+          <!-- /TAB ITEM -->
+          
+          <!-- TAB ITEM -->
+          <div class="tab-item">
+            <%- include("../../partials/digibank/sExp") %>
+          </div>
+          <!-- /TAB ITEM -->
+          
+          <!-- TAB ITEM -->
+          <div class="tab-item">
+            <%- include("../../partials/digibank/evolution") %>
+          </div>
+          <!-- /TAB ITEM -->
+          
+          <!-- TAB ITEM -->
+          <div class="tab-item">
+            <%- include("../../partials/digibank/degeneration") %>
+          </div>
+          <!-- /TAB ITEM -->
+        </div>
+        <!-- /TAB BODY -->
+      </div>
+      <!-- /TAB WRAP -->
+              
+          <% } else { %>
+          <div class="grid-5col_1 centered no-gutter" style="display: flex; justify-content: center; flex-wrap: wrap; background: url('https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/image_2022-10-29_103036523_eYRsIqe2t.png?updatedAt=1667050245820'); background-size: cover; background-position: center; padding: 32px; margin-top: -32px;">
+            
+          <div class="DV-message" style="justify-self: center; width: 50rem; margin-bottom: 32px;">
+            <img
+              src="https://ik.imagekit.io/projectvoyage/Digimons/Datamon_nM4idwN--.gif?ik-sdk-version=javascript-1.4.3&updatedAt=1670347687582"
+              style="width: 8%; margin-right: 16px; border-radius: 50%;"
+            />
+            <div style="display: inline-block; vertical-align: middle; width: 40rem;">
+              <h4 style="margin-bottom: 4px;">
+                 Hello, <%- userData.username%>! Are you interested in increasing your digibank space?
+              </h4>
+              <p>
+                If so, feel free to <a onclick="openUpgradeDigibankModal()" class="text-yellow"><b>click here</b></a> to explore the digibank space expansion options I have available for sale.
+            </div>
+          </div>
+            
+            <% for(var i=0; i< userData.modules.capacities.digibank; i++) { %>
+                <% if(userData.modules.digibank[i]) { %>
+                  <% const dgmndbank = userData.modules.digibank[i]%>
+                      <!-- DIGIMON PREVIEW -->
+                      <div class="product-preview small" style="text-align:center; margin-left: 16px; margin-bottom: 16px;">
+                        <!-- DIGIMON PREVIEW IMG WRAP -->
+                        <div class="product-preview-img-wrap" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; border-radius: 8px;">
+                          <!-- DIGIMON PREVIEW IMG -->
+                          <a href="/digibank/<%- dgmndbank._id %>">
+                            <figure class="product-preview-img box_digimon">
+                              <img style="width: fit-content; max-width: 82px; max-height: 82px;" class="<%- (dgmndbank.health === 0) ? 'battle-defeated' : ''%>" src="<%- dgmndbank.sprite %>" alt="<%- dgmndbank.species %>">
+                              <span class="ui-icon ui-icon-tier-<%- dgmndbank.tier.toLowerCase() %>" style="margin: 0; position: absolute; top: 64%; left: 74%; height: 24px;"></span>
+                            </figure>
+                          </a>
+                          <!-- /DIGIMON PREVIEW IMG -->
+                        </div>
+                        <!-- /DIGIMON PREVIEW IMG WRAP -->
+                      </div>
+                      <!-- /DIGIMON PREVIEW -->
+                <% } else { %>
+                    <!-- MY TEAM DIGIMON PREVIEW -->
+                    <div class="inventory-item-preview empty party-preview" style="margin-left: 16px !important; margin-bottom: 16px; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px; border-radius: 8px;">
+                      <!-- NO DIGIMON ICON -->
+                      <div class="party-preview-nodigimon"></div>
+                      <!-- /NO DIGIMON ICON -->
+                    </div>
+                    <!-- /MY TEAM DIGIMON PREVIEW -->
+                <% } %>
+            <%}%>
+
+              </div>
+            
+          <% } %>
+          
+
+				</div>
+				<!-- /LAYOUT BODY -->
+
+				<!-- LAYOUT SIDEBAR 2 -->
+				<div class="layout-sidebar2 layout-item gutter-medium">
+          <!-- WIDGET SIDEBAR -->
+          <%- include("../../partials/tamer/sidebar/tamer") %>
+          <%- include("../../partials/tamer/sidebar/my_team") %>
+					<!-- /WIDGET SIDEBAR -->
+				</div>
+				<!-- /LAYOUT SIDEBAR 2 -->
+			</div>
+			<!-- LAYOUT CONTENT FULL -->
+
+			<%- include("../../partials/footer") %>
+      <%- include("../../functions/main") %>
+
+				<!-- app bundle -->
+				<script src="/app.bundle.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+				<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+				<style>
+					.swiper {
+						width: 100%;
+						height: 400px;
+					}
+				</style>
+        
+        <script>
+          function openUpgradeDigibankModal() {
+              swal.fire({
+                showConfirmButton: false,
+                html: `
+                  <div style="height: max-content; padding: 16px;">
+                    <img style="width: 100px; margin-top: 4px;" class="floater" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_digibank.png?v=1665508150671"></img>
+                    <div class="upgrade-info-container">
+                      <p><b class="text-white">Current Capacity:</b> <%- userData.modules.capacities.digibank %></p>
+                      <p><b class="text-white">Digimon Data Stored:</b> <%- userData.modules.digibank.length %> Digimon Data</p>
+
+                      <br>
+                      <p><b class="text-white">Upgraded Capacity:</b> <%- userData.modules.capacities.digibank + 15 %>
+                      <p><b class="text-white">Upgrade Cost:</b> <%- Math.round(1550 * (userData.modules.capacities.digibank / 4.2) )%> Bits
+                    </div>
+                    
+                    <a style="margin-top: 16px;" onclick="upgradeDigibank()" class="button button-normal small blue">Upgrade Digibank</a>
+                  </div>
+                      `
+              })
+          }
+          
+          async function upgradeDigibank() {
+            try {
+              const response = await API.post("/inventory/upgradeInventory", {});
+              if (response.data) window.location.reload();
+            } catch (error) {
+              console.log(`Error while upgrading inventory: ${error}`);
+              console.log(error.response);
+
+              if (error.response && error.response.status === 400) {
+                Toastify({
+                  escapeMarkup: false,
+                  text: `<h4>${error.response.data}</h4>`,
+                  duration: 3000,
+                  close: false,
+                  gravity: "top",
+                  position: "center",
+                  stopOnFocus: false,
+                  className: "app-toast failure",
+                }).showToast();
+              }
+            }
+          }
+        </script>
+        
+				<script>
+          XM_Tab({
+            container: '#digimon-digibank-tab-wrap',
+            selectedClass: 'active'
+          });
+          
+          <% if(locals.digimonData) { %>
+            const CDNB = document.getElementById("changeDigimonNickname")
+
+            CDNB.addEventListener("click", () => {
+              swal.fire({
+                showConfirmButton: false,
+                html: `<div class="section-title-wrap blue" style="margin-bottom: 16px;">
+                          <h2 class="section-title medium" style="text-align: left;"><img class="ui-icon-30" src="https://ik.imagekit.io/projectvoyage/Interface/ui_edit_6gG-hR4gT.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670297292963"> Edit Digimon Nickname</h2>
+                          <div class="section-title-separator"></div>
+                        </div>
+
+                        <input type="text" maxlength=16 id="digimon_nickname" name="nickname" placeholder="Change <%- digimonData.nickname || digimonData.species %>'s Nickname">
+                        <label style="margin-top:14px; margin-bottom: -4px; display: none;" id="nickname_error" class="rl-label">This is an Easter Egg</label>
+                        <a id="editNickname" class="button blue" style="margin-top: 16px; padding: 0 16px;">Edit Nickname</a>
+                      `
+              })
+
+              const DNB = document.getElementById("editNickname")
+              const DN = document.getElementById("digimon_nickname")
+              const ERR = document.getElementById("nickname_error")
+
+              DNB.addEventListener("click", () => {
+                DNB.classList.add("disabled")
+                fetch("/api/digibank/digimon/change_nickname", {
+                  method: "POST",
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ nickname: DN.value, id:  "<%- digimonData._id %>" })
+                }).then((response) => response = response.json()).then((body) => {
+                    if(body.error) {
+                      ERR.innerHTML = body.error
+                      ERR.style.display = "block"
+                      ERR.style.color = "#f30a5c"
+                      DNB.classList.remove("disabled")
+                    } else {
+                      if(ERR.style.display === "block") ERR.style.display = "none"
+                      window.location.reload()
+                    }
+                })
+              })
+            })
+          <% } %>
+          // eVO!
+          <% if(locals.evolutions) { %>
+            function evolutionAnimation(digimon) {
+    const _evolutionMusic = new Audio("https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/Digimon%20Tamers%20Battle%20Evolution%20Soundtrack%2002_%20Brave%20Heart.mp3?v=1689366365394")
+    
+    swal.fire({
+      showConfirmButton: false,
+      showClass: {
+        popup: "animate__animated animate__fadeIn animate__faster"
+      },
+      customClass: {
+        htmlContainer: "swal2-html-container-full"
+      },
+      width: '46rem',
+      padding: '0rem',
+      html: `
+        <div class="_evolutionContainer">
+          <div class="_evolutionBackgroundAnimation">
+            <h2 id="_digimonToEvolveTitle1" style="position: absolute; left: 1rem;" class=" animate__animated animate__slideInRight"><%- digimonData.nickname || digimonData.species %> evolves to...</h2>
+            <h2 id="_digimonToEvolveTitle2" style="position: absolute; text-align: right; top: 24rem; right: 1rem;" class=" animate__animated animate__slideInLeft"><%- digimonData.nickname || digimonData.species %> evolves to...</h2>
+            <div id="_digimonToEvolveSprite"  style="background: url('<%- digimonData.sprite %>'); background-repeat: no-repeat; background-position: center; height: 26rem;"></div>
+            <div id="_digimonToEvolveAura" style="position: absolute; width: 100%; top: 1rem; background-repeat: no-repeat; background-position: center; height: 26rem;"></div>
+          </div>
+        </div>
+      `,
+      didOpen: () => {
+        const sprite = document.getElementById("_digimonToEvolveSprite");
+        const aura = document.getElementById("_digimonToEvolveAura");
+        const t1 = document.getElementById("_digimonToEvolveTitle1");
+        const t2 = document.getElementById("_digimonToEvolveTitle2");
+
+        _evolutionMusic.play();
+
+        setTimeout(() => {
+          sprite.classList.add("animate__animated", "animate__infinite", "animate__flash");
+
+          setTimeout(() => {
+            sprite.classList.add("animate__fast");
+
+            t1.classList.replace("animate__slideInRight", "animate__fadeOut");
+            t2.classList.replace("animate__slideInLeft", "animate__fadeOut");
+
+            setTimeout(() => {
+              sprite.classList.remove("animate__fast", "animate__infinite", "animate__flash");
+              sprite.classList.add("_evoAnim1");
+
+              setTimeout(() => {
+                aura.style.backgroundImage = "url('https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/4DSRYL.gif?v=1689364190073')";
+
+                setTimeout(() => {
+                  sprite.style.backgroundImage = `url(${digimon.sprite})`;
+                  aura.style.backgroundImage = "";
+
+                  setTimeout(() => {
+                    sprite.classList.add("_evoAnim2");
+
+                    setTimeout(() => {
+                      t1.innerHTML = `...${digimon.species}!`;
+                      t1.classList.replace("animate__fadeOut", "animate__slideInRight");
+
+                      t2.innerHTML = `${digimon.species}!...`;
+                      t2.classList.replace("animate__fadeOut", "animate__slideInLeft");
+                    }, 100);
+
+                  }, 200);
+
+                }, 1500);
+
+              }, 500);
+
+            }, 1500);
+
+          }, 4500);
+
+        }, 2500);
+
+        
+      }, 
+      willClose: () => {
+        setInterval(() => {
+          if(_evolutionMusic.volume > 0) _evolutionMusic.volume -= 0.1
+        }, 100)
+        
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000)
+      }
+    })
+  }
+                <%
+                
+                  let tamerRankRequirementToEvolve = {
+                    "In-Training": 1,
+                    "Rookie": 2,
+                    "Champion": 4,
+                    "Ultimate": 6,
+                    "Mega": 10
+                  };
+                  
+                %>
+            
+            <% if(evolutions.to) { %>
+              <% evolutions.to.forEach(evo => { %>
+                <% if(evo.sXpType) { %>
+              
+                XM_Tooltip({
+                  container: '#TT_Evo_<%- evo.id %>',
+                  type: 'html',
+                  direction: 'bottom',
+                  align: 'center',
+                  animation: {
+                    type: 'translate-out-fade'
+                  },
+                  htmlContent: `
+                  <div class="TT-evolution">
+                    <div class="section-title-wrap blue" style="margin-bottom: 16px;">
+                      <h2 class="section-title small"><%- evo.species %></h2>
+                      <div class="section-title-separator"></div>
+                    </div>
+
+                    <% 
+                      let evoSXPType;
+
+                                   switch(evo.sXpType.toLowerCase()) {
+                                     case "dragon":
+                                        evoSXPType = "dragonsroar"
+                                     break;
+                                     case "holy":
+                                        evoSXPType = "virusbusters"
+                                     break;
+                                     case "dark":
+                                        evoSXPType = "nightmaresoldiers"
+                                     break;
+                                     case "beast":
+                                        evoSXPType = "naturespirits"
+                                     break;
+                                     case "bird":
+                                        evoSXPType = "windguardians"
+                                     break;
+                                     case "machine":
+                                        evoSXPType = "metalempire"
+                                     break;
+                                     case "aquatic":
+                                        evoSXPType = "deepsavers"
+                                     break;
+                                     case "plant/insect":
+                                        evoSXPType = "jungletroopers"
+                                     break;
+                                   }
+                    %>
+
+                    <div style="text-align: center;">
+                      <h5 style="margin-bottom: 8px;">Minimum Level: <p style="color: <%- (evo.minLevel > digimonData.level) ? "red" : "green" %>;"><%- digimonData.level %>/<%- evo.minLevel %></p></h5>
+                      <h5>Minimum S.EXP: 
+                        <div class="ui-icon-wrap" style="margin-bottom: 8px; justify-content: center;">
+                          <span class="ui-icon ui-icon-family-<%- evoSXPType %>"></span>
+                            <p style="font-weight: 600; color: <%- (evo.sXpAmount > digimonData.sExp[evo.sXpType.toLowerCase()]) ? "red" : "green" %>;"><%- digimonData.sExp[evo.sXpType.toLowerCase()] %>/<%- evo.sXpAmount %></p>
+                        </div>
+                      <h5 style="margin-bottom: 8px;">Minimum Tamer Rank: <p style="color: <%- (tamerRankRequirementToEvolve[evo.form] > userData.modules.level) ? "red" : "green" %>;"><%- userData.modules.level %>/<%- tamerRankRequirementToEvolve[evo.form] %></p></h5>
+                      </h5>
+                      
+                      <%
+                        let canEvolve = false
+                        let hasEnoughSExp = evo.sXpAmount <= digimonData.sExp[evo.sXpType.toLowerCase()]
+                        let hasEnoughLevel = evo.minLevel <= digimonData.level
+                        let hasCompletedTamerRankRequirement = userData.modules.level >= tamerRankRequirementToEvolve[evo.form]
+          
+                        //console.log(hasEnoughSExp, hasEnoughLevel, hasCompletedTamerRankRequirement)
+          
+                        if(hasEnoughSExp && hasEnoughLevel && hasCompletedTamerRankRequirement) canEvolve = true
+                      %>
+                      
+                      <% if(canEvolve) { %>
+                        <a style="margin-top: 8px;" onclick="evolve(<%- evo.id %>)" class="button button-normal small blue">Evolve</a>
+                      <% } %>
+
+                    </div>
+                  </div>
+                  `
+                });
+                
+              <% } %>
+              
+              <% }) %>
+                
+              function evolve(id) {
+                API.post("/digibank/digimon/evolve", { evolutionId: id, digimonId: "<%- digimonData._id %>"}).then(({ data }) => {
+                  if(data.type === "success") evolutionAnimation(data.digimon)
+                })
+              }
+            <% } %>
+              
+              <% if(evolutions.from) { %>
+              <% evolutions.from.forEach(evo => { %>
+                
+                <% if(evo.sXpType) { %>
+              
+                XM_Tooltip({
+                  container: '#TT_Evo_<%- evo.id %>',
+                  type: 'html',
+                  direction: 'bottom',
+                  align: 'center',
+                  animation: {
+                    type: 'translate-out-fade'
+                  },
+                  htmlContent: `
+                  <div class="TT-evolution">
+                    <div class="section-title-wrap blue" style="margin-bottom: 16px;">
+                      <h2 class="section-title small"><%- evo.species %></h2>
+                      <div class="section-title-separator"></div>
+                    </div>
+
+                    <% 
+                      let evoSXPType;
+
+                                   switch(evo.sXpType.toLowerCase()) {
+                                     case "dragon":
+                                        evoSXPType = "dragonsroar"
+                                     break;
+                                     case "holy":
+                                        evoSXPType = "virusbusters"
+                                     break;
+                                     case "dark":
+                                        evoSXPType = "nightmaresoldiers"
+                                     break;
+                                     case "beast":
+                                        evoSXPType = "naturespirits"
+                                     break;
+                                     case "bird":
+                                        evoSXPType = "windguardians"
+                                     break;
+                                     case "machine":
+                                        evoSXPType = "metalempire"
+                                     break;
+                                     case "aquatic":
+                                        evoSXPType = "deepsavers"
+                                     break;
+                                     case "plant/insect":
+                                        evoSXPType = "jungletroopers"
+                                     break;
+                                   }
+                    %>
+
+                    <div style="text-align: center;">
+                      <h5 style="margin-bottom: 8px;">Minimum Level: <p style="color: <%- (evo.minLevel > digimonData.level) ? "red" : "green" %>;"><%- digimonData.level %>/<%- evo.minLevel %></p></h5>
+                      <h5>Minimum S.EXP: 
+                        <div class="ui-icon-wrap" style="margin-bottom: 8px; justify-content: center;">
+                          <span class="ui-icon ui-icon-family-<%- evoSXPType %>"></span>
+                            <p style="font-weight: 600; color: <%- (evo.sXpAmount > digimonData.sExp[evo.sXpType.toLowerCase()]) ? "red" : "green" %>;"><%- digimonData.sExp[evo.sXpType.toLowerCase()] %>/<%- evo.sXpAmount %></p>
+                        </div>
+                      <h5 style="margin-bottom: 8px;">Minimum Tamer Rank: <p style="color: <%- (tamerRankRequirementToEvolve[evo.form] > userData.modules.level) ? "red" : "green" %>;"><%- userData.modules.level %>/<%- tamerRankRequirementToEvolve[evo.form] %></p></h5>
+                      </h5>
+                      
+                      <%
+                        let canEvolve = false
+                        let hasEnoughSExp = evo.sXpAmount <= digimonData.sExp[evo.sXpType.toLowerCase()]
+                        let hasEnoughLevel = evo.minLevel <= digimonData.level
+                        let hasCompletedTamerRankRequirement = userData.modules.level >= tamerRankRequirementToEvolve[evo.form]
+          
+                        //console.log(hasEnoughSExp, hasEnoughLevel, hasCompletedTamerRankRequirement)
+          
+                        if(hasEnoughSExp && hasEnoughLevel && hasCompletedTamerRankRequirement) canEvolve = true
+                      %>
+                      
+                      <% if(canEvolve) { %>
+                        <a style="margin-top: 8px;" onclick="degenerate(<%- evo.id %>)" class="button button-normal small blue">Degenerate</a>
+                      <% } %>
+                    </div>
+                  </div>
+                  `
+                });
+                
+              <% } %>
+              
+              <% }) %>
+                
+              function degenerate(id) {
+                API.post("/digibank/digimon/degenerate", { evolutionId: id, digimonId: "<%- digimonData._id %>"}).then(({ data }) => {
+                  if(data.type === "success") evolutionAnimation(data.digimon)
+                })
+              }
+            <% } %>
+          <% } %>
+            
+              function createDigimon(species) {
+                  API.post("/digibank/scans/create", { species}).then(({ data }) => {
+                    if(data.type === "success") window.location.reload()
+                  })
+                }  
+                                    
+				</script>
+        
+<script>
+  
+  <% if(locals.isOnParty) { %>
+    function removeFromParty(_id) {
+      API.post("/digibank/digimon/removeFromParty", { _id }).then(({ data }) => {
+        if(data.type === "success") window.location.reload()
+      })
+    }
+  <% } else { %>
+    function addToParty(_id) {
+      API.post("/digibank/digimon/addToParty", { _id }).then(response => {
+        if(response.data.type === "success") return window.location.reload()
+      }).catch(err => {
+        Toastify({
+          escapeMarkup: false,
+          text: `<h4>${err.response.data}</h4>`,
+          duration: 3000,
+          close: false,
+          gravity: "top",
+          position: "center",
+          stopOnFocus: false,
+          className: "app-toast failure",
+        }).showToast();
+      })
+    }
+  <% } %>
+    
+  function release(_id) {
+    API.post("/digibank/digimon/release", { _id }).then(({ data }) => {
+      if(data.type === "success") window.location.href = "/digibank/"
+    })
+  }
+             
+          <%
+            function gerarEstrelas(numero) {
+              let estrelas = '';
+
+              for (let i = 0; i < numero; i++) {
+                estrelas += '\u2605';
+              }
+
+              return estrelas;
+            }  
+          %>
+             
+  <% if(locals.digimonData && digimonData.equipment && Object.keys(digimonData.equipment).length) { %>
+  <% const thisItem = digimonData.equipment %>
+  function unequip(_id) {
+    API.post("/digibank/digimon/unequip", { _id }).then(window.location.reload())
+  }
+  
+  function openUpgradeModal() {
+    swal.fire({
+      showConfirmButton: false,
+        html: `<div class="section-title-wrap" style="margin-bottom: 16px; text-align: center;">
+          <h2 class="section-title medium"><%- thisItem.name %></h2>
+          <span class="text-yellow"><%- gerarEstrelas(thisItem.rarity || 1) %></span>
+        </div>
+
+        <p>This is an work in progress feature.</p>
+      `
+    })
+  }
+
+    
+tippy("#equiped_item", {
+    theme: "maintheme",
+    allowHTML: true,
+    interactive: true,
+    placement: "left",
+    content: `
+                   <div>
+                    <div style="display: flex; justify-content: center; border-radius: 0 16px 0 0;" class="background-rarity-<%- thisItem.rarity || 4 %>">
+                      <img style="width: fit-content; max-width: 142px; max-height: 142px;" src="<%- thisItem.icon %>">
+                    </div>
+
+                    <div class="TT-evolution">
+                      <div style="margin-bottom: 16px; text-align: center;">
+                        <h3><%- thisItem.name %></h3>
+                        <span><%- gerarEstrelas(thisItem.rarity || 1) %></span>
+                        <p><%- `${thisItem.type.charAt(0).toUpperCase()}${thisItem.type.slice(1, thisItem.type.length)}` %></p>
+                      </div>
+
+                      <div style="text-align: center">
+                        <h4>Level: <p style="display: inline;"><%- thisItem.level || "Undefined" %></p><h4>
+                      </div>
+
+                      <div class="party-modal-stats" style="padding: 4px;">
+                        <div style="display: flex; justify-content: center; text-align: center; gap: 8px;">
+                          <p><b>Atk:</b> +<%- thisItem.mainStat %></p>
+                          <p><b><%- thisItem.subStat%>:</b> +<%- thisItem.statAmountIncrease %></p>
+                        </div>
+                        <p style="text-align: left; padding: 4px;"><b><%- thisItem.passive.name %>:</b><br><%- thisItem.passive.description %></p>
+                      </div>
+                      
+                      <div style="margin-top: 8px; display: flex; gap: 4px; justify-content: center;">
+                        <a onclick="unequip('<%- digimonData._id %>')" class="button blue small"><i class="fa-solid fa-square-minus"></i> Unequip</a>
+                        <a onclick="openUpgradeModal()" class="button blue small"><i class="fa-solid fa-square-plus"></i> Upgrade</a>
+                      </div>
+                  </div>
+    `
+  })
+    
+  <% } %>
+  
+</script>
+            
+
+</body>
+
+</html>

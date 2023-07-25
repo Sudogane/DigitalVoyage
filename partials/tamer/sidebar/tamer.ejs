@@ -1,0 +1,66 @@
+<% if(userData.costume) {%>
+
+        <!-- WIDGET SIDEBAR -->
+					<div class="widget-sidebar">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap yellow">
+							<h2 class="section-title medium widget-sidebar-title">
+								<img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_tamer.png?v=1665342182399"> <%- userData.username%>
+							</h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->							
+            
+              <div class="widget-sidebar-body">
+                <div class="grid-2col_2 centered" style="grid-template-columns: repeat(2, 84px);">
+                      <!-- COLUMN -->
+                      <div class="column" style="margin-bottom:8px;text-align: center;">
+                        <h3><%- (userData.modules.VIP) ? "<p class='text-yellow'>Prestigious Tamer</p>" : "Novice Tamer"%></h3>
+                      </div>
+                      <!-- /COLUMN -->
+                  
+                      <!-- COLUMN -->
+                      <div class="column" style="display: flex; justify-content: center;">
+                          <div onclick="_openAvatarModal()" style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;border-radius: 8px; margin-bottom: 16px; height: 254px; width: 254px; background-image: url(<%- (userData && userData.avatarUrl) ? userData.avatarUrl : costume.avatarUrl %>); background-position: center center; background-size: cover; background-repeat: no-repeat;">
+                            <img style="height: 72px; position: relative; top: 70%; right: -84%;" src="<%- costume.costumeUrl %>">
+                          </div>
+                      </div>
+                      <!-- /COLUMN -->
+                          
+                      <!-- COLUMN -->
+                      <div class="column" style="display: flex; justify-content: center;">
+                          <a href="/digibank"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/menu_digibank.png?v=1664640432730" style="width: 56px;"></a>
+                          <a href="/me/inventory"><img src="https://ik.imagekit.io/projectvoyage/Interface/Menu/menu_inventory_c6fs9LuVl.png?updatedAt=1682279382471" style="width: 56px;"></a>
+                          <a onclick="_openDigiviceLevelModal()"><img src="https://ik.imagekit.io/projectvoyage/Interface/ui_upgradeDigivice_tbVue8bRhH.png?updatedAt=1679703331220" style="width: 56px;"></a>
+                          <a onclick="_openExploreMenu()"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/menu_map.png?v=1665096632321" style="width: 56px;"></a>
+                      </div>
+                      <!-- /COLUMN -->
+                    </div>
+                        
+                    <div class="grid-1col_1" style="margin-top: 10px">
+                      <!-- COLUMN -->
+                      <div class="column">
+                        <div style="display: flex; justify-content: center; width: 356px; align-items: center; flex-direction: column">
+                          <h3 style="text-transform: inherit">Level: <p style="display: inline-flex; font-weight: 600;"> <%- userData.modules.level %> </p></h3>
+                          <h3 style="text-transform: inherit">Experience: <p style="display: inline-flex; font-weight: 600;"> <%- userData.modules.exp%>/<%- Math.floor(((528 * userData.modules.level) * 1.228) / 1.5) %> </p></h3>
+                             <h3 style="text-transform: inherit">Stamina: <p style="display: inline-flex; font-weight: 600;"> <%- userData.modules.stamina.current %>/<%- userData.modules.stamina.max %> </p></h3>
+                             <% if( userData.modules.stamina.current < userData.modules.stamina.max) { %>
+                               <p id="user_sidebar_nextStaminaRegen"></p>
+                               <p id="user_sidebar_untilFullStamina"></p>
+                             <% } %>
+                        </div>
+                        
+                        <br>
+                          
+                          <div style="width: max-content; gap: 4px; display: grid;">
+                            <h4 style="text-transform: inherit; width: max-content"><span class="ui-icon ui-icon-extra ui-icon-autoplaycards"></span>Auto Play Cards: <p style="display: inline-flex; font-weight: 600;"> <%- userData.modules.autoPlayTickets %> </p></h4>
+                            <h4 style="text-transform: inherit; width: max-content"><span class="ui-icon ui-icon-extra icon-bits"></span> Bits: <p style="display: inline-flex; font-weight: 600;"> <%- new Intl.NumberFormat('de-DE').format(userData.modules.BITS) %> </p></h4>
+                            <h4 style="text-transform: inherit; width: max-content"><span class="ui-icon ui-icon-extra icon-data"></span> Data: <p style="display: inline-flex; font-weight: 600;"> <%- new Intl.NumberFormat('de-DE').format(userData.modules.DATA) %> </p></h4>
+                            <h4 style="text-transform: inherit; width: max-content"><span class="ui-icon ui-icon-extra icon-yen"></span> Yen: <p style="display: inline-flex; font-weight: 600;"> <%- new Intl.NumberFormat().format(userData.modules.YEN) %> </p></h4>
+                          </div>
+                      </div>
+                      <!-- /COLUMN -->
+                    </div>
+              </div>
+					  </div>
+<% } %>

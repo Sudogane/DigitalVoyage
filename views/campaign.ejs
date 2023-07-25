@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digital Voyage | <%- campaign.name %> Map</title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digital Voyage is a brand-new browser, Join-us and start your brand new Digital Adventure right now, the Digital Universe calls for you, Voyager!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digital.Voyage: Season One">
+  <meta property="og:title" content="Digital Voyage - A Brand new Virtual Monster Browser-RPG">
+  <meta property="og:description" content="🎮 Embark on a thrilling Digital Voyage as a Digital Explorer in our exciting new Browser Game! 🌟 Join-us now to explore the world of Digital Voyage🎲🐾, where you'll encounter Virtual Monsters, Bosses, and Lots of Fun. 🤖🔍 Become a Voyager and start your epic journey today! 🚀💫 Don't miss out on this captivating experience! Play now and embrace the excitement! 🎉🌌 Art By: thatsquirrelly">
+  <meta property="og:image" content="https://img3.gelbooru.com//samples/19/ee/sample_19ee0fa08b4a12c8bfc94d594f16690f.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body>
+	<!-- NAVIGATION WRAP -->
+	<%- include('../partials/navbar') %>
+	<!-- /NAVIGATION WRAP -->
+
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+    
+    <!-- Mobile User Banner-->
+    <%- include("../partials/tamer/banner")%>
+    <!-- Mobile User Banner-->
+
+		<!-- LIVE NEWS WIDGET WRAP -->
+		<%- include("../partials/livenews") %>
+			<!-- /LIVE NEWS WIDGET WRAP -->
+
+			<!-- LAYOUT CONTENT FULL -->
+			<div class="layout-content-1 layout-item-3-1 grid-limit">
+				<!-- LAYOUT BODY -->
+				<div class="layout-body layout-item layout-item-body">
+					<!-- WIDGET ITEM -->
+					<div class="widget-item">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap violet">
+							<h2 class="section-title medium layout-item-title"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_campaign.png?v=1665098447605"> <%- campaign.name %></h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->
+					</div>
+					<!-- /WIDGET ITEM -->
+
+					<!-- LAYOUT ITEM -->
+					<div class="layout-item centered layout-item-container">
+            <div id="campaign_map" style="max-width: 100%; max-height: 100%; width: 840px; height: 701px; background-image: url(<%- campaign.mapImage %>); background-size: cover; margin-top: -24px;">
+            <% campaign.locations.forEach((quest) => { %>
+              <%
+                let questIndex = campaign.locations.indexOf(quest)
+                let questToBeCleared = campaign.locations[questIndex - 1]
+                let questIcon = (quest.clearPreviousToUnlock && questToBeCleared && !userData.modules.stagesCleared.includes(questToBeCleared.id) ) ? "https://ik.imagekit.io/projectvoyage/Interface/Menu/QuestLocked_Icon_5a0jBHlhc.png?updatedAt=1682995391583" : "https://ik.imagekit.io/projectvoyage/Interface/Menu/QuestBoss_Icon__ynfCyBLF.png?updatedAt=1682995391342"   
+                let isQuestClickable = (quest.clearPreviousToUnlock && questToBeCleared && !userData.modules.stagesCleared.includes(questToBeCleared.id) ) ? "" : `openStagesModal(${JSON.stringify(quest)})`
+                 
+                let stagesId = campaign.locations[questIndex].stages.map(stage => stage.id)
+                let stagesCleared = 0;
+                for(var i=0; i<stagesId.length; i++) {
+                  let stageId = stagesId[i]
+                  if(userData.modules.stagesCleared.includes(stageId)) stagesCleared++
+                }
+                /*
+                * MOVE TO BACKEND AHAHHAHAAH
+                * AHAHAHAHAHAHAH!!!! AHHAHAHAH!!!
+                */
+                                                
+                const filtered = quest.stages.filter(stage => stage.bossStage )[0]
+                if(userData.modules.cooldowns.boss[filtered.id]) {
+                  // remove cooldown????!!!????
+                
+                  const ONE_HOUR = 60 * 60 * 1000;
+                  const COOLDOWN_DATE = new Date(userData.modules.cooldowns.boss[filtered.id])
+                  const CURRENT_DATE = new Date()
+                  const TIME_LEFT_IN_MS =  CURRENT_DATE - COOLDOWN_DATE
+                  const isStageCooldownDone = TIME_LEFT_IN_MS > ONE_HOUR
+
+                  // test 2
+                  //console.log((COOLDOWN_DATE) - ONE_HOUR > CURRENT_DATE, isStageCooldownDone)
+                  if(isStageCooldownDone) {
+                    (async() => {
+                      await userData.updateOne({ $unset: { [`modules.cooldowns.boss.${filtered.id}`]: 1 } })
+                    })()                
+                  }
+                }
+                          
+                questIcon = (stagesCleared === stagesId.length) ? "https://ik.imagekit.io/projectvoyage/Interface/Menu/QuestPrincipal_Icon_-caiq0fr8.png?updatedAt=1682995392591" : questIcon                                  
+              %>
+                
+              <div class="floater"><a onClick='<%- isQuestClickable %>'><img style="width: 40px; position: relative; top: <%- quest.location.y%>px; left: <%- quest.location.x%>px;" src="<%- questIcon %>"></a></div>
+            <% }) %>
+            </div>
+					</div>
+					<!-- /LAYOUT ITEM -->
+				</div>
+				<!-- /LAYOUT BODY -->
+
+				<!-- LAYOUT SIDEBAR 2 -->
+				<div class="layout-sidebar2 layout-item gutter-medium">
+          <!-- WIDGET SIDEBAR -->
+          <%- include("../partials/tamer/sidebar/tamer") %>
+          <%- include("../partials/tamer/sidebar/my_team") %>
+					<!-- /WIDGET SIDEBAR -->
+				</div>
+				<!-- /LAYOUT SIDEBAR 2 -->
+			</div>
+			<!-- LAYOUT CONTENT FULL -->
+
+			<%- include("../partials/footer") %>
+
+				<!-- app bundle -->
+				<script src="/app.bundle.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+				<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <%- include("../functions/main") %>
+        
+        <style>
+          @keyframes pulse {
+              0% {
+                  -webkit-transform: scaleX(1);
+                  transform: scaleX(1)
+              }
+
+              50% {
+                  -webkit-transform: scale3d(1.05,1.5,1.05);
+                  transform: scale3d(1.05,1.02,1.05)
+              }
+
+              to {
+                  -webkit-transform: scaleX(1);
+                  transform: scaleX(1)
+              }
+          }
+          
+          .stage-popup-body {
+            width: 660px;
+          }
+        </style>
+        
+        <script>
+          let stagesOnCooldown = []
+          
+          function msToTime(s) {
+            function pad(n, z) {
+              z = z || 2;
+              return ('00' + n).slice(-z);
+            }
+
+            var ms = s % 1000;
+            s = (s - ms) / 1000;
+            var secs = s % 60;
+            s = (s - secs) / 60;
+            var mins = s % 60;
+            var hrs = (s - mins) / 60;
+
+            return pad(hrs) + ':' + pad(mins) + ':' + pad(secs) //+ '.' + pad(ms, 3);
+          }
+          
+          function openStagesModal(quest) {
+            let stagesHeader = ""
+            let stagesContent = ""
+            let stageIndex = 0
+            
+            let locationsId = <%- JSON.stringify(campaign.locations.map(location => location.id)) %>
+            let stagesCleared = <%- JSON.stringify(userData.modules.stagesCleared) %>
+            
+            const currentDate = Date.now()
+            
+            quest.stages.forEach(stage => {
+              stageIndex++
+              let stageButton = `<div><a onclick="fightStage('${stage.id}')" class="button button-normal blue" style="margin-top: 16px;"><i class="fa-solid fa-location-crosshairs"></i> Fight stage</a></div>`
+              let autoPlayButton = `<div><a onclick="autoPlay(10, '${stage.id}')" class="button button-normal blue <%- (userData.modules.autoPlayTickets < 10) ? 'disabled red' : '' %>" style="margin-top: 16px;"><i class="fa-solid fa-location-crosshairs"></i> [10x] Auto Play</a></div>`
+              let stageTitle = `Stage ${stageIndex}`
+              
+              let previousQuestId = locationsId.indexOf(quest.id) - 1
+              let previousStage = quest.stages[stageIndex - 2]
+              let needsToClearPreviousQuest = (quest.clearPreviousToUnlock && locationsId[previousQuestId] && stageIndex === 1 && !stagesCleared.includes(locationsId[previousQuestId]))
+              let needsToClearPreviousStage = (stage.clearPreviousToUnlock && previousStage && !stagesCleared.includes(previousStage.id))
+              let hasStageBeenCleared = stagesCleared.includes(stage.id)
+              let locked = false
+              
+              if(needsToClearPreviousQuest || needsToClearPreviousStage) {
+                stageButton = "" 
+                stageTitle = `<i class="fa-solid fa-lock"></i>`
+                locked = true
+              }
+              
+              if(!hasStageBeenCleared || stage.bossStage) autoPlayButton = ""
+              
+              
+              if(stage.bossStage) {
+                const stageCooldowns = <%- JSON.stringify(userData.modules.cooldowns.boss) %>
+                if(stageCooldowns[stage.id]) {
+                  stageButton = `<p style='margin-top: 16px;'><b>This stage is on Cooldown.</b> <div id='stage_cooldownTimer${stage.id}'></div></p>`
+                  
+                  const cooldownDate = stageCooldowns[stage.id]
+                  let timeDiff = (cooldownDate - currentDate)
+                  
+                  setInterval(() => {
+                    let cooldownCountdown = document.getElementById(`stage_cooldownTimer${stage.id}`)
+                    timeDiff = timeDiff - 1000
+                    
+                    if(cooldownCountdown) cooldownCountdown.innerHTML = `<p class="text-yellow">${msToTime(timeDiff)}</p>`
+                  }, 1000)
+                  
+                }
+              }
+              
+              stagesHeader += `
+                        <!-- TAB HEADER ITEM -->
+                        <div class="tab-header-item ${(locked) ? "red" : ""}">
+                          <!-- TAB HEADER ITEM TEXT -->
+                          <p class="tab-header-item-text">${stageTitle}</p>
+                          <!-- /TAB HEADER ITEM TEXT -->
+                        </div>
+                        <!-- /TAB HEADER ITEM -->
+              `
+
+              if(!locked) stagesContent += `
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <div style="padding: 98px; background-image: url(${quest.backdrop}); background-size: cover; width: 542px; height: 278px; border-radius: 8px;">
+                            ${(stage.bossStage) ? "<h1 class='animate__animated animate__flash animate__infinite animate__slower' style='position: relative; top: -88%; color: #f30a5c; text-shadow: 0 0 10px #890634; margin-bottom: -36px;'>BOSS INCOMING</h1>" : ""}
+                            <div class="grid-3col_1 centered">
+                                  <!-- COLUMN -->
+                                  <div class="column">
+                                    ${(stage.enemies[1]) ? `
+                                    <div style="background-image: url(${stage.enemies[1].sprite}); background-size: contain; background-repeat: no-repeat;width: 70px; height: 70px; display: inline-block; background-position: center center;"></div>
+                                    
+                                    ` : ""}
+                                  </div>
+                                  <!-- /COLUMN -->
+
+                                  <!-- COLUMN -->
+                                  <div class="column">
+                                    ${(stage.enemies[0]) ? `
+                                    <div style="background-image: url(${stage.enemies[0].sprite}); background-size: contain; background-repeat: no-repeat;width: 70px; height: 70px; display: inline-block; background-position: center center;"></div>
+                                    
+                                    ` : ""}
+                                  </div>
+                                  <!-- /COLUMN -->
+
+                                  <!-- COLUMN -->
+                                  <div class="column">
+                                    ${(stage.enemies[2]) ?`<div style="background-image: url(${stage.enemies[2].sprite}); background-size: contain; background-repeat: no-repeat;width: 70px; height: 70px; display: inline-block;"></div>` : ""}
+                                  </div>
+                                  <!-- /COLUMN -->
+                            </div>
+                          </div>
+                          
+                          <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">${stageButton} ${autoPlayButton}</div>
+                        </div>
+                        <!-- /TAB ITEM -->
+              `
+              
+              else stagesContent += `
+                        <!-- TAB ITEM -->
+                        <div class="tab-item" style="overflow: hidden;">
+                          <div style="padding: 98px; background-image: url(${quest.backdrop}); background-size: cover; width: 542px; height: 278px; border-radius: 8px;">
+                            <h2 class='animate__animated animate__flash animate__infinite animate__slower' style='color: #f30a5c; text-shadow: 0 0 10px #890634;'>Clear the previous stage!</h2>
+                          </div>
+                          
+                          <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">${stageButton} ${autoPlayButton}</div>
+                        </div>
+                        <!-- /TAB ITEM -->
+              `
+            })
+            
+            let stagesTab = `
+                    <!-- TAB WRAP -->
+                    <div id="tab-wrap-01" class="tab-wrap">
+                      <!-- TAB HEADER -->
+                      <div class="tab-header items-${quest.stages.length}">
+                        ${stagesHeader}
+                      </div>
+                      <!-- /TAB HEADER -->
+
+                      <!-- TAB BODY -->
+                      <div class="tab-body">
+                        ${stagesContent}
+                      </div>
+                      <!-- /TAB BODY -->
+                    </div>
+                    <!-- /TAB WRAP -->
+            `
+            
+            Swal.fire({
+              width: "660px",
+              showConfirmButton: false,
+              html: `
+                <div class="section-title-wrap blue" style="margin-bottom: 24px; margin-top: 8px; text-align: left;">
+                  <div class="ui-icon-wrap">
+                    <img style="margin-right: 8px;" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_campaign.png?v=1665098447605">
+                    <div>
+                      <h2 class="section-title text-yellow"> ${quest.name} </h2>
+                      <h4 class="section-subtitle"> ${quest.chapter.replace(/\*/ig, "\'")} </h4>
+                    </div>
+                  </div>
+                  <div class="section-title-separator"></div>
+                </div>
+              ${stagesTab}
+              `,
+              showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+              },
+              hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+              }
+            })
+            
+            XM_Tab({
+              container: '#tab-wrap-01'
+            });
+          }
+        </script>
+        
+        <script>
+          function fightStage(id) {
+            axios.post(window.location.origin + "/api/battle/create", {
+              stage: id
+            }).then((response) => {
+              response = response.data
+              if(response.type && response.type === "redirect" && !response.deadDigimon) location.href = `/battle/campaign/${id}`
+              if(response.deadDigimon) alert("You can't battle with your digimon dead.")
+              if(response.isStageOnCooldown) alert("Don't know how you ended up here but, this stage is on cooldown.")
+            })
+          }
+          
+          function autoPlay(amount, stage) {
+            API.post("/autobattle", { amount, stage }).then(({data}) => {
+              if(data.action === "refresh") location.reload()
+            })
+          }
+        </script>
+</body>
+</html>

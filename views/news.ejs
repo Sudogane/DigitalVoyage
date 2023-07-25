@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digital Voyage | <%- post.title %></title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digital Voyage is a brand-new browser, Join-us and start your brand new Digital Adventure right now, the Digital Universe calls for you, Voyager!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digital.Voyage: Season One">
+  <meta property="og:title" content="Digital Voyage - A Brand new Virtual Monster Browser-RPG">
+  <meta property="og:description" content="🎮 Embark on a thrilling Digital Voyage as a Digital Explorer in our exciting new Browser Game! 🌟 Join-us now to explore the world of Digital Voyage🎲🐾, where you'll encounter Virtual Monsters, Bosses, and Lots of Fun. 🤖🔍 Become a Voyager and start your epic journey today! 🚀💫 Don't miss out on this captivating experience! Play now and embrace the excitement! 🎉🌌 Art By: thatsquirrelly">
+  <meta property="og:image" content="https://img3.gelbooru.com//samples/19/ee/sample_19ee0fa08b4a12c8bfc94d594f16690f.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <style>
+      .post-open .post-open-header-wrap{
+          background:linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),url(<%- post.image %>) no-repeat center;
+          background-size:cover
+      }
+  </style>
+</head>
+  
+<body>
+  <!-- NAVIGATION WRAP -->
+  <%- include('../partials/navbar') %>
+  <!-- /NAVIGATION WRAP -->
+
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+
+  <!-- LAYOUT ITEM -->
+  <div class="layout-item gutter-big padded-bottom">
+    <!-- POST OPEN -->
+    <div class="post-open game-review">
+      <!-- POST OPEN HEADER WRAP -->
+      <div class="post-open-header-wrap">
+        <!-- POST OPEN HEADER -->
+        <div class="post-open-header grid-limit" style="margin-bottom: 0px;">
+          <!-- REVIEW RATING -->
+
+          <!-- /REVIEW RATING -->
+
+          <!-- TAG ORNAMENT -->
+          <a href="news-v2.html" class="tag-ornament">  <%- post.category %></a>
+          <!-- /TAG ORNAMENT -->
+
+          <!-- POST OPEN TITLE -->
+          <p class="post-open-title big negative">  <%- post.title %></p>
+          <!-- /POST OPEN TITLE -->
+
+          <!-- POST AUTHOR INFO -->
+          <div class="post-author-info-wrap negative">
+            <!-- USER AVATAR -->
+            <a href="search-results.html">
+              <figure class="user-avatar tiny liquid">
+                <img src="img/users/04.jpg" alt="user-04">
+              </figure>
+            </a>
+            <!-- /USER AVATAR -->
+            <p class="post-author-info small light">By <a href="" class="post-author">ADMIN</a><span class="separator">|</span><%- post.creationDate %><span class="separator">|</span><a href="#op-comments" class="post-comment-count">97 Comments</a></p>
+          </div>
+          <!-- /POST AUTHOR INFO -->
+        </div>
+        <!-- /POST OPEN HEADER -->
+      </div>
+      <!-- /POST OPEN HEADER WRAP -->
+      
+      <!-- LIVE NEWS WIDGET WRAP -->
+      <%- include("../partials/livenews") %>
+      <!-- /LIVE NEWS WIDGET WRAP -->
+
+      <!-- POST OPEN CONTENT -->
+      <div class="post-open-content v2 grid-limit" style="margin-top: 80px;">
+        <!-- POST OPEN BODY  -->
+        <div class="post-open-body">
+          <%- post.content %>
+        </div>
+        <!-- /POST OPEN BODY -->
+      </div>
+      <!-- /POST OPEN CONTENT -->
+    </div>
+    <!-- /POST OPEN -->
+    
+  </div>
+  <!-- /LAYOUT ITEM -->
+
+  <%- include("../partials/footer") %>
+
+<!-- app bundle -->
+<script src="/app.bundle.min.js"></script>
+<%- include("../functions/main") %>
+</body>
+</html>

@@ -1,0 +1,39 @@
+            <div class="table">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Evolution Line</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row big">
+                          
+                        <div class="grid-3col_1 centered" style="display: flex; padding: 16px; align-items: center;">
+                        <%# if(locals.evolutions) { %>
+                          <% if(!evolutions.from) { %>
+                            <div class="column">
+                              <h4 style="col-size">No Degeneration line registered</h4>
+                            </div>
+                          <% } else { %>
+                            <% evolutions.from.forEach(evo => { %>
+                              <div class="column">
+                                <div style="background-image: url(https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/evolution_stand.png?v=1665768639371); background-size: contain; background-repeat: no-repeat; background-position: bottom; width: 158px; height: 158px; display: flex; justify-content: center; align-items: center; margin-bottom: 8px;">
+                                  <div id="TT_Evo_<%- evo.id %>" style="margin-top: 34px; background-image: url(<%- evo.sprite %>); background-size: contain; background-repeat: no-repeat; background-position: center; width: 100px; height: 100px;"></div>
+                                </div>
+                              </div>
+                            <% }) %>
+                          <% } %>
+                        <%# } %>
+                        </div>
+
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>

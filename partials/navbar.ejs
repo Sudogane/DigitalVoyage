@@ -1,0 +1,67 @@
+<!-- HEADER WRAP -->
+<% if(locals.user) { %>
+  <%- include('../partials/tamer/nav') %>
+<% } %>
+<!-- /HEADER WRAP -->
+
+<nav class="navigation-wrap">
+    <!-- NAVIGATION -->
+    <div class="navigation grid-limit">
+      <!-- LOGO -->
+      <div class="logo">
+        <!-- LOGO IMG -->
+        <figure class="logo-img">
+          <img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/59508455-343f-4570-ac02-44f5cb664b19.image.png?v=1665101686551" alt="Logo">
+        </figure>
+        <!-- /LOGO IMG -->
+
+        <!-- LOGO TEXT -->
+        <div class="logo-text">
+          <h2 class="logo-title">Digital <span class="highlight">Voyage</span></h2>
+          <p class="logo-info">Public Beta</p>
+        </div>
+        <!-- /LOGO TEXT -->
+      </div>
+      <!-- /LOGO -->
+
+      <!-- MAIN MENU -->
+      <ul class="main-menu">
+        <!-- MAIN MENU ITEM -->
+        <li class="main-menu-item">
+          <a href="/" class="main-menu-item-link"><img class="main-menu-icon" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_myHome.png?v=1665342182400"> Home</a>
+        </li>
+        <!-- /MAIN MENU ITEM -->
+        
+        <% if(!locals.user) {%>
+        <!-- Login Button -->
+        <li class="main-menu-item">
+          <a href="/login" class="main-menu-item-link"><img class="main-menu-icon" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_demiVeemon.png?v=1665342070850"> Login</a>
+        </li>
+      </ul>
+      <!-- /Login Button -->
+      <% } else if(userData && userData.username) { %>
+        <li class="main-menu-item">
+          <a onclick="_openGachaModal()" class="main-menu-item-link"><img class="main-menu-icon" src="https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/tamagotchi.png?v=1686179788844"> Invocation</a>
+        </li>
+        
+        <li class="main-menu-item">
+          <a onclick="_openExploreMenu()" class="main-menu-item-link"><img class="main-menu-icon" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_campaign.png?v=1665098447605"> Explore</a>
+        </li>
+        
+        <li class="main-menu-item">
+          <a id="nav-daily" onclick="dailyModal()" class="main-menu-item-link badge">
+            <img class="main-menu-icon" src="https://ik.imagekit.io/projectvoyage/Interface/ui_gift_lSDHNSYTG.png?updatedAt=1686881326809"> Daily
+          </a>
+        </li>
+        
+        <li class="main-menu-item">
+          <a href="/me" class="main-menu-item-link">
+            <img class="main-menu-icon" src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_tamer.png?v=1665342182399"> <%- (userData.username.length > 4) ? `${userData.username.substr(0, 5)}...` : userData.username %>
+          </a>
+        </li>
+      <% } %>
+      
+      <!-- /MAIN MENU -->
+    </div>
+    <!-- NAVIGATION -->
+  </nav>

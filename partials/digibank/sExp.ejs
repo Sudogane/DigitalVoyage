@@ -1,0 +1,66 @@
+            <div class="table">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Species Experience</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row big" style="display: table-cell; padding: 16px;">
+                          <div class="column">
+                            
+                            <% Object.keys(digimonData.sExp).forEach((exp) => { %>
+                              
+                              <%
+                                let sExpFamily;
+                                
+                                 switch(exp) {
+                                   case "dragon":
+                                      sExpFamily = "dragonsroar"
+                                   break;
+                                   case "holy":
+                                      sExpFamily = "virusbusters"
+                                   break;
+                                   case "dark":
+                                      sExpFamily = "nightmaresoldiers"
+                                   break;
+                                   case "beast":
+                                      sExpFamily = "naturespirits"
+                                   break;
+                                   case "bird":
+                                      sExpFamily = "windguardians"
+                                   break;
+                                   case "machine":
+                                      sExpFamily = "metalempire"
+                                   break;
+                                   case "aquatic":
+                                      sExpFamily = "deepsavers"
+                                   break;
+                                   case "plant/insect":
+                                      sExpFamily = "jungletroopers"
+                                   break;
+                                 }
+                              %>
+                              
+                              <div class="ui-icon-wrap" style="margin-bottom: 4px;">
+                                <span class="ui-icon ui-icon-family-<%- sExpFamily %>"></span>
+                                <h4 style="text-transform: inherit;">
+                                  <%- exp.charAt(0).toUpperCase() + exp.slice(1) %>
+                                  <p style="font-weight: 600;"><%- digimonData.sExp[exp]%></p>
+                                </h4>
+                              </div>
+                              
+                            <% }) %>
+                            
+                          </div>
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>

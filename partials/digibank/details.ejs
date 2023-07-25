@@ -1,0 +1,305 @@
+            <div class="table" style="margin-bottom: 16px;">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Health</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Mana</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row small">
+                          <% 
+                             const digimonMaxHealth = 2*(digimonData.stats.health + digimonData.stats.additional.health)
+                             const digimonMaxMana = (digimonData.stats.mana + digimonData.stats.additional.mana)
+                          %>
+                          
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- `${digimonData.health}/${digimonMaxHealth}` %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- `${digimonData.mana}/${digimonMaxMana}` %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+                          
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>
+
+<div class="table">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Level</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Experience</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                        
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Friendship</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row small">
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- digimonData.level %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            
+                            
+                            <% 
+                               let additionalBaseExpNeeded = {
+                                 "In-Training": 36,
+                                 "Rookie": 50,
+                                 "Champion": 76,
+                                 "Ultimate": 120,
+                                 "Mega": 160
+                               }
+                               let formExpMultiplier = {
+                                 "In-Training": 0.95,
+                                 "Rookie": 1.2,
+                                 "Champion": 1.6,
+                                 "Ultimate": 2.4,
+                                 "Mega": 2.98
+                               }
+                               let tierExpMultiplier = 1
+                               
+                               let toLevelUp = Math.floor( ( additionalBaseExpNeeded[digimonData.form] * (digimonData.level * 0.868) ) * 2.35 )
+                               toLevelUp = Math.floor( toLevelUp * formExpMultiplier[digimonData.form] )
+                            %>
+                            
+                            <p class="table-text bolder"><%- digimonData.xp %>/<%- toLevelUp  %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+                          
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- digimonData.friendship %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>
+              
+            <div class="table" style="margin-top: 16px;">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Nature</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Tier</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Size</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                        
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Personality</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row small">
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder" style="display: flex; justify-content: center; align-items: center;">
+                              <span class="ui-icon ui-icon-nature-<%- digimonData.nature.toLowerCase() %>"></span> <%- digimonData.nature %>
+                            </p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder" style="display: flex; justify-content: center; align-items: center;">
+                              <span class="ui-icon ui-icon-tier-<%- digimonData.tier.toLowerCase() %>" style="margin: 0;"></span>
+                            </p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+                          
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- digimonData.size %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- digimonData.personality %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+                          
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>
+              
+            <div class="table" style="margin-top: 16px;">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Species</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Evolution Stage</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Family</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Attribute</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Element</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+
+                      <!-- TABLE ROWS -->
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row small">
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- digimonData.species %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder"><%- digimonData.form %></p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder" style="display: flex; justify-content: center; align-items: center;">
+                              <% switch(digimonData.family.toLowerCase()) {
+                                case "dragon's roar": %>
+                                    <span class="ui-icon ui-icon-family-dragonsroar"></span>
+
+                                <% break;
+                                   
+                                case "nightmare soldiers": %>
+                                    <span class="ui-icon ui-icon-family-nightmare soldiers"></span>
+
+                                <% break;
+                                   
+                                case "nature spirits": %>
+                                    <span class="ui-icon ui-icon-family-naturespirits"></span>
+
+                                <% break;
+                                   
+                                case "virus busters": %>
+                                    <span class="ui-icon ui-icon-family-virusbusters"></span>
+
+                                <% break;
+                                   
+                                case "deep savers": %>
+                                    <span class="ui-icon ui-icon-family-deepsavers"></span>
+
+                                <% break;
+                                   
+                                case "metal empire": %>
+                                    <span class="ui-icon ui-icon-family-metalempire"></span>
+
+                                <% break;
+                                   
+                                case "wind guardians": %>
+                                    <span class="ui-icon ui-icon-family-windguardians"></span>
+
+                                <% break;
+                                   
+                                case "jungle troopers": %>
+                                    <span class="ui-icon ui-icon-family-jungletroopers"></span>
+
+                                <% break;
+                                }
+                              %>
+                            <%- digimonData.family %>
+                            </p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder" style="display: flex; justify-content: center; align-items: center;">
+                              <span class="ui-icon ui-icon-attribute-<%- digimonData.attribute.toLowerCase() %>"></span> <%- digimonData.attribute %>
+                            </p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+
+                          <!-- TABLE ROW ITEM -->
+                          <div class="table-row-item">
+                            <p class="table-text bolder" style="display: flex; justify-content: center; align-items: center;">
+                              <span class="ui-icon ui-icon-element-<%- digimonData.element.toLowerCase() %>"></span> <%- digimonData.element %>
+                            </p>
+                          </div>
+                          <!-- /TABLE ROW ITEM -->
+                        </div>
+                        <!-- /TABLE ROW -->
+                      </div>
+                      <!-- /TABLE ROWS -->
+                    </div>

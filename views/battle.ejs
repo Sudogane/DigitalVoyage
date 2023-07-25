@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digital Voyage | Battle</title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digital Voyage is a brand-new browser, Join-us and start your brand new Digital Adventure right now, the Digital Universe calls for you, Voyager!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digital.Voyage: Season One">
+  <meta property="og:title" content="Digital Voyage - A Brand new Virtual Monster Browser-RPG">
+  <meta property="og:description" content="🎮 Embark on a thrilling Digital Voyage as a Digital Explorer in our exciting new Browser Game! 🌟 Join-us now to explore the world of Digital Voyage🎲🐾, where you'll encounter Virtual Monsters, Bosses, and Lots of Fun. 🤖🔍 Become a Voyager and start your epic journey today! 🚀💫 Don't miss out on this captivating experience! Play now and embrace the excitement! 🎉🌌 Art By: thatsquirrelly">
+  <meta property="og:image" content="https://img3.gelbooru.com//samples/19/ee/sample_19ee0fa08b4a12c8bfc94d594f16690f.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  
+</head>
+
+<body style="overflow: hidden;">
+  <div id="_battleLoading" style="height: 100dvh; width: 100%; position: absolute; background-image: url(<%- STAGE.data?.backdrop || STAGE.backdrop %>); background-size: cover; background-repeat: no-repeat; background-position: center; z-index: 9999">
+    <div style="height: 100dvh; width: 100%; position: absolute; backdrop-filter: blur(8px); background: #1e1e2d8a; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+      <img src="https://cdn.glitch.global/01f4400b-53dc-443a-be28-dae1dfeaf721/AA%20(1).gif?v=1690119233072">
+    </div>
+  </div>
+	<!-- NAVIGATION WRAP -->
+	<%- include('../partials/navbar') %>
+	<!-- /NAVIGATION WRAP -->
+
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+
+    <!-- Mobile User Banner-->
+    <%- include("../partials/tamer/banner")%>
+    <!-- Mobile User Banner-->
+      
+		<!-- LIVE NEWS WIDGET WRAP -->
+		<%- include("../partials/livenews") %>
+			<!-- /LIVE NEWS WIDGET WRAP -->
+
+			<!-- LAYOUT CONTENT FULL -->
+			<div class="layout-content-1 layout-item-3-1 grid-limit">
+				<!-- LAYOUT BODY -->
+				<div class="layout-body layout-item layout-item-body">
+					<!-- WIDGET ITEM -->
+					<div class="widget-item">
+						<!-- SECTION TITLE WRAP -->
+						<div class="section-title-wrap violet">
+							<h2 class="section-title medium layout-item-title"><img src="https://ik.imagekit.io/projectvoyage/Interface/ui_battle_BG0Pq-NO7.png?ik-sdk-version=javascript-1.4.3&updatedAt=1666198873374"> Battle</h2>
+							<div class="section-title-separator"></div>
+						</div>
+						<!-- /SECTION TITLE WRAP -->
+					</div>
+					<!-- /WIDGET ITEM -->
+
+					<!-- LAYOUT ITEM -->
+					<div class="layout-item centered" style="margin-bottom: 96px;">
+            <div id="_battle" class="battle-wrap" style="background-image: url(<%- STAGE.data?.backdrop || STAGE.backdrop %>)">
+              
+              <div id="battle_turn_wrap" class="battle-turn-wrap">
+                <h1 id="battle_turn" class="battle-turn">Turn</h1>
+              </div>
+              
+              <% if(STAGE.battleType === "coliseum") { %>
+                <% const opponent = STAGE.data.opponent %>
+                <img src=<%- opponent.sprite%> style="position: absolute; top: 255px; left: 417px; max-width: 40px;">
+              <% } %>
+              
+              <div class="grid-3col_1 centered battle-top-ui">
+                  <div class="column" style="width: 180px; text-align: center;">
+                      <% if(STAGE.enemies[1]) { %>
+                        <p>[Lv. <%- STAGE.enemies[1].level %>] <%- STAGE.enemies[1].species %></p>
+                        <div id="battle-enemyhealthbar1" class="battle-healthbar"></div>
+                      <% } %>  
+                  </div>            
+                          
+                  <div class="column" style="width: 180px; text-align: center;">
+                      <% if(STAGE.enemies[0]) { %>
+                        <p>[Lv. <%- STAGE.enemies[0].level %>] <%- (STAGE.bossStage) ? "<b class='text-red'>BOSS<b> " : ""%><%- STAGE.enemies[0].species %></p>
+                        <div id="battle-enemyhealthbar0" class="battle-healthbar"></div>
+                      <% } %>  
+                  </div>
+                    
+                  <div class="column" style="width: 180px; text-align: center;">
+                      <% if(STAGE.enemies[2]) { %>
+                        <p>[Lv. <%- STAGE.enemies[2].level %>] <%- STAGE.enemies[2].species %></p>
+                        <div id="battle-enemyhealthbar2" class="battle-healthbar"></div>
+                      <% } %>  
+                  </div>
+              </div>
+              
+              <div class="grid-3col_1" style="display: grid; justify-content: center; align-items: center; justify-items: center; grid-gap: 70px; position: relative; padding: 8%; top: 8%;">
+                <!-- COLUMN -->
+                <div class="column">
+                  <% if(STAGE.enemies[1]) { %>
+                    <div id="battle-select1" class="battle-select"></div>
+                    <div id="battle-enemy1"  class="battle-enemy" style="width: 280px; height: 255px; background-image: url(<%- STAGE.enemies[1].sprite %>); background-position: center; background-repeat: no-repeat"></div>
+                    <p id="battle-damagedisplay1" style="left: 21%" class="battle-damagedisplay">696969</p>
+                  <% } %>
+                </div>
+                <!-- /COLUMN -->
+              
+                <!-- COLUMN -->
+                <div class="column">
+                  <% if(STAGE.enemies[0]) { %>
+                    <div id="battle-select0" class="battle-select"></div>
+                    <div id="battle-enemy0" class="battle-enemy" style="width: 280px; height: 255px; background-image: url(<%- STAGE.enemies[0].sprite %>); background-position: center; background-repeat: no-repeat"></div>
+                    <p id="battle-damagedisplay0" class="battle-damagedisplay">696969</p>
+                  <% } %>
+                </div>
+                <!-- /COLUMN -->
+
+                <!-- COLUMN -->
+                <div class="column">
+                  <% if(STAGE.enemies[2]) { %>
+                    <div id="battle-select2" class="battle-select"></div>
+                    <div id="battle-enemy2" class="battle-enemy" style="width: 280px; height: 255px; background-image: url(<%- STAGE.enemies[2].sprite %>); background-position: center; background-repeat: no-repeat"></div>
+                    <p id="battle-damagedisplay2" style="left: 72%;" class="battle-damagedisplay">696969</p>
+                  <% } %>
+                </div>
+                <!-- /COLUMN -->
+              </div>
+                  
+              <div class="grid-3col_1 centered battle-bottom-ui">
+                <div class="column battle-log" id="BATTLE_LOG">
+                  
+                </div>
+                <div class="column" style="margin-left: 64px; padding: 4px; width: 28%; display: grid; grid-auto-flow: column;">
+                  <div class="battle-digimon-box">
+                    <% if(userData.modules.party[0]) { %>
+                      <p id="battle-damagepartydisplay0" style="left: 31%;" class="battle-damagepartydisplay">696969</p>
+                      <div id="battle-partyhealthbar0" class="battle-healthbar battle-partyhealthbar"></div>
+                      <img id="battle-digimon0" class="battle-digimon" src="<%- userData.modules.party[0].sprite %>" alt="<%- userData.modules.party[0].species %>">                    
+                    <% } %>
+                  </div>
+                      
+                  <div class="battle-digimon-box">
+                    <% if(userData.modules.party[1]) { %>
+                      <p id="battle-damagepartydisplay1" style="left: 37%;" class="battle-damagepartydisplay">696969</p>
+                      <div id="battle-partyhealthbar1" class="battle-healthbar battle-partyhealthbar"></div>
+                      <img id="battle-digimon1" class="battle-digimon" src="<%- userData.modules.party[1].sprite %>" alt="<%- userData.modules.party[1].species %>">     
+                    <% } %>
+                  </div>
+                      
+                  <div class="battle-digimon-box">
+                    <% if(userData.modules.party[2]) { %>
+                      <p id="battle-damagepartydisplay2" style="left: 43%;" class="battle-damagepartydisplay">696969</p>
+                      <div id="battle-partyhealthbar2" class="battle-healthbar battle-partyhealthbar"></div>
+                      <img id="battle-digimon2" class="battle-digimon" src="<%- userData.modules.party[2].sprite %>" alt="<%- userData.modules.party[2].species %>">                        
+                    <% } %>
+                  </div>
+                </div>
+                <div class="column">
+                  <div id="BATTLE_ACTIONS" class="battle-ui-actions">
+                    <% const PROHIBITED_BATTLETYPES = ["coliseum", "worldboss"] %>
+                    <button id="BATTLE_MOVES" class="battle-button" onclick="Battle.handleButtons('moveList')"><i class="fa-solid fa-fire" style="margin-right: 4px;"></i> Moves</button>
+                    <% if(!STAGE.bossStage && !PROHIBITED_BATTLETYPES.includes(STAGE.battleType)) { %>
+                      <button id="BATTLE_SCAN" class="battle-button" onclick="Battle.handleButtons('scan')"><i class="fa-solid fa-barcode" style="margin-right: 4px;"></i> Scan</button>
+                    <% } %>
+                    <% if(!PROHIBITED_BATTLETYPES.includes(STAGE.battleType)) { %>
+                      <button id="BATTLE_ITEMS" class="battle-button"><i class="fa-solid fa-briefcase" style="margin-right: 4px;"></i> Items</button>
+                    <% } %>
+                    <% if(!STAGE.bossStage && !PROHIBITED_BATTLETYPES.includes(STAGE.battleType) ) { %>
+                      <button id="BATTLE_FLEE" class="battle-button" onclick="Battle.fleeBattle()"><i class="fa-solid fa-person-running" style="margin-right: 4px;"></i> Flee</button>
+                    <% } %>
+                  </div>
+                  <div id="BATTLE_MOVELIST" class="battle-ui-actions" style="display: none">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+					</div>
+					<!-- /LAYOUT ITEM -->
+				</div>
+				<!-- /LAYOUT BODY -->
+
+				<!-- LAYOUT SIDEBAR 2 -->
+				<div class="layout-sidebar2 layout-item gutter-medium">
+          <!-- WIDGET SIDEBAR -->
+          <%- include("../partials/tamer/sidebar/tamer") %>
+          <%- include("../partials/tamer/sidebar/my_team") %>
+					<!-- /WIDGET SIDEBAR -->
+				</div>
+				<!-- /LAYOUT SIDEBAR 2 -->
+			</div>
+			<!-- LAYOUT CONTENT FULL -->
+
+			<%- include("../partials/footer") %>
+
+				<!-- app bundle -->
+				<script src="/app.bundle.min.js"></script>
+				<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <%- include("../functions/battle") %>
+        <%- include("../functions/main") %>
+        
+        <script>
+          document.addEventListener("DOMContentLoaded", (e) => {
+            const loader = document.getElementById("_battleLoading")
+            const battle = document.getElementById("_battle")
+            document.body.style.overflowY = "scroll"
+            loader.classList.add("animate__animated")
+            loader.classList.add("animate__fadeOut")
+            battle.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            
+            setTimeout(() => {
+              loader.remove()
+            }, 1000)
+          });  
+        </script>
+          
+</body>
+</html>

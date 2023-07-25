@@ -1,0 +1,73 @@
+  <div class="header-wrap">
+    <!-- HEADER -->
+    <div class="header grid-limit">
+      <!-- WIDGET SELECTABLES -->
+      <div class="widget-selectables">
+
+      </div>
+      <!-- /WIDGET SELECTABLES -->
+      <!-- WIDGET SELECTABLES -->
+      <div class="widget-selectables">
+        <!-- WIDGET OPTIONS WRAP -->
+        <div class="widget-options-wrap">
+          <!-- CURRENT OPTION -->
+          <div id="account-dropdown-trigger" class="current-option">
+            <!-- CURRENT OPTION VALUE -->
+            <div class="current-option-value">
+              <img class="widget-option-img user-avatar micro" src=<%- user.picture %> alt="avatar-01">
+              <p class="widget-option-text">Logged in as <%- user.name %></p>
+            </div>
+            <!-- /CURRENT OPTION VALUE -->
+            <!-- ARROW ICON -->
+            <svg class="arrow-icon">
+              <use xlink:href="#svg-arrow"></use>
+            </svg>
+            <!-- /ARROW ICON -->
+          </div>
+          <!-- /CURRENT OPTION -->
+          <!-- WIDGET OPTIONS -->
+          <div id="account-dropdown" class="widget-options short linkable">
+            <!-- WIDGET OPTION HEADING -->
+            <div class="widget-option-heading blue">
+              <p class="widget-option-text"><img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" style="width: 10%"> <%- user.name %>#<%- ("0000" + userData.id).slice(-4) %></p>
+            </div>
+            <!-- /WIDGET OPTION HEADING -->
+            <!-- WIDGET OPTION -->
+            <a href="account-settings.html" class="widget-option">
+              <p class="widget-option-text"><i class="fa-solid fa-gears"></i> Account Settings</p>
+            </a>
+            <!-- /WIDGET OPTION -->
+                
+            <!-- WIDGET OPTION HEADING -->
+            <div class="widget-option-heading red">
+              <p class="widget-option-text"><img src="https://cdn-icons-png.flaticon.com/512/2065/2065203.png" style="width: 10%"> Socials</p>
+            </div>
+            <!-- /WIDGET OPTION HEADING -->
+            <!-- WIDGET OPTION -->
+            <a href="https://discord.gg/aqyFjnyxwP" class="widget-option">
+              <p class="widget-option-text"><i class="fa-brands fa-discord"></i> Discord</p>
+            </a>
+            <!-- /WIDGET OPTION -->
+          </div>
+          <!-- /WIDGET OPTIONS -->
+        </div>
+        <!-- /WIDGET OPTIONS WRAP -->
+        
+        <!-- BUTTON -->
+        <a href="/logout" class="button tiny red log-button"> Logout
+          <!-- BUTTON ORNAMENT -->
+          <div class="button-ornament">
+            <!-- ARROW ICON -->
+            <svg class="arrow-icon">
+              <use xlink:href="#svg-arrow"></use>
+            </svg>
+            <!-- /ARROW ICON -->
+          </div>
+          <!-- /BUTTON ORNAMENT -->
+        </a>
+        <!-- /BUTTON -->
+      </div>
+      <!-- /WIDGET SELECTABLES -->
+    </div>
+    <!-- /HEADER -->
+  </div>

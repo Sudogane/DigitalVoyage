@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- style -->
+	<link rel="stylesheet" href="/css/style.min.css">
+	<link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/app.css">
+  
+  <script src="https://kit.fontawesome.com/d34c5a5f9e.js" crossorigin="anonymous"></script>
+	<!-- favicon -->
+	<link rel="icon" href="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/favicon.ico?v=1664078135563">
+	<title>Digital Voyage</title>
+    
+  <meta name="theme-color" content="#30aaff">
+  <meta name="description" content="Digital Voyage is a brand-new browser, Join-us and start your brand new Digital Adventure right now, the Digital Universe calls for you, Voyager!">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Digital.Voyage: Season One">
+  <meta property="og:title" content="Digital Voyage - A Brand new Virtual Monster Browser-RPG">
+  <meta property="og:description" content="🎮 Embark on a thrilling Digital Voyage as a Digital Explorer in our exciting new Browser Game! 🌟 Join-us now to explore the world of Digital Voyage🎲🐾, where you'll encounter Virtual Monsters, Bosses, and Lots of Fun. 🤖🔍 Become a Voyager and start your epic journey today! 🚀💫 Don't miss out on this captivating experience! Play now and embrace the excitement! 🎉🌌 Art By: thatsquirrelly">
+  <meta property="og:image" content="https://img3.gelbooru.com//samples/19/ee/sample_19ee0fa08b4a12c8bfc94d594f16690f.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+  <!-- NAVIGATION WRAP -->
+  <%- include('../partials/navbar') %>
+  <!-- /NAVIGATION WRAP -->
+
+  <!-- OPEN MOBILE MENU WRAPPER -->
+  <%- include("../partials/openMobileMenu")%>
+  <!-- OPEN MOBILE MENU WRAPPER -->
+
+  <div class="main-banner"></div>
+      
+  <!-- LIVE NEWS WIDGET WRAP -->
+  <%- include("../partials/livenews") %>
+  <!-- /LIVE NEWS WIDGET WRAP -->
+
+  <!-- LAYOUT CONTENT FULL -->
+<div class="layout-content-1 layout-item-3-1 grid-limit">
+    <!-- LAYOUT BODY -->
+    <div class="layout-body layout-item layout-item-body">
+      <!-- WIDGET ITEM -->
+      <div class="widget-item">
+        <!-- SECTION TITLE WRAP -->
+        <div class="section-title-wrap blue">
+          <h2 class="section-title medium layout-item-title"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_latestNews.png?v=1665342007382"> Latest News</h2>
+          <div class="section-title-separator"></div>
+        </div>
+        <!-- /SECTION TITLE WRAP -->
+      </div>
+      <!-- /WIDGET ITEM -->
+
+      <!-- POST PREVIEW SHOWCASE -->
+      
+    <div class="post-preview-showcase grid3-1col centered layout-item-container" style="padding: 1rem;">
+      <% newsList.forEach((post) => { %>
+        <!-- POST PREVIEW -->
+        <div class="post-preview landscape e-sport" style="width: 50rem;">
+          <!-- POST PREVIEW IMG WRAP -->
+          <a href="/news/<%- post.id %>">
+            <div class="post-preview-img-wrap">
+              <!-- POST PREVIEW IMG -->
+              <figure class="post-preview-img liquid imgLiquid_bgSize imgLiquid_ready" style="background-image: url(<%- post.thumbnail %>); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+                <img src=<%- post.thumbnail %> alt="post-36" style="display: none;">
+              </figure>
+              <!-- POST PREVIEW IMG -->
+            </div>
+          </a>
+          <!-- /POST PREVIEW IMG WRAP -->
+
+          <!-- TAG ORNAMENT -->
+          <a href="/news/<%- post.id %>" class="tag-ornament"><%- post.category %></a>
+          <!-- /TAG ORNAMENT -->
+
+          <!-- POST PREVIEW TITLE -->
+          <a href="/news/<%- post.id %>" class="post-preview-title"><%- post.title %></a>
+          <!-- POST AUTHOR INFO -->
+          <div class="post-author-info-wrap">
+            <p class="post-author-info small light">By <a href="search-results.html" class="post-author">ADMIN</a><span class="separator">|</span><%- post.creationDate %></p>
+          </div>
+          <!-- /POST AUTHOR INFO -->
+          <!-- POST PREVIEW TEXT -->
+          <p class="post-preview-text"><%- post.description %></p>
+        </div>
+        <!-- /POST PREVIEW -->
+      <% }) %>
+
+      </div>
+      
+      <!-- /POST PREVIEW SHOWCASE -->
+
+      <!-- LAYOUT ITEM -->
+      <div class="layout-item centered padded read-more-wrap" style="margin-bottom: 8px;">
+        <!-- BUTTON -->
+        <a href="#" class="button violet">
+          Load more news...
+          <!-- BUTTON ORNAMENT -->
+          <div class="button-ornament">
+            <!-- ARROW ICON -->
+            <svg class="arrow-icon medium">
+              <use xlink:href="#svg-arrow-medium"></use>
+            </svg>
+            <!-- /ARROW ICON -->
+    
+            <!-- CROSS ICON -->
+            <svg class="cross-icon small">
+              <use xlink:href="#svg-cross-small"></use>
+            </svg>
+            <!-- /CROSS ICON -->
+          </div>
+          <!-- /BUTTON ORNAMENT -->
+        </a>
+        <!-- /BUTTON -->
+      </div>
+      <!-- /LAYOUT ITEM -->
+    </div>
+    <!-- /LAYOUT BODY -->
+
+    <!-- LAYOUT SIDEBAR 2 -->
+    <div class="layout-sidebar2 layout-item gutter-medium">
+      <% if(!locals.user) {%>
+        <!-- WIDGET SIDEBAR -->
+        <div class="widget-sidebar">
+          <!-- SECTION TITLE WRAP -->
+          <div class="section-title-wrap violet">
+            <h2 class="section-title medium"><img src="https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/ui_demiVeemon.png?v=1665342070850"> Join the Digital World</h2>
+            <div class="section-title-separator"></div>
+          </div>
+          <!-- /SECTION TITLE WRAP -->
+
+
+        <!-- LAYOUT ITEM -->
+        <div style="padding: 32px;" class="layout-item centered padded read-more-wrap">
+          <!-- BUTTON -->
+          <a href="/login" class="button big violet full">
+            Register
+            <!-- BUTTON ORNAMENT -->
+            <div class="button-ornament">
+              <!-- ARROW ICON -->
+              <svg class="arrow-icon medium">
+                <use xlink:href="#svg-arrow-medium"></use>
+              </svg>
+              <!-- /ARROW ICON -->
+
+              <!-- CROSS ICON -->
+              <svg class="cross-icon small">
+                <use xlink:href="#svg-cross-small"></use>
+              </svg>
+              <!-- /CROSS ICON -->
+            </div>
+            <!-- /BUTTON ORNAMENT -->
+          </a>
+          <!-- /BUTTON -->
+        </div>
+        <!-- /LAYOUT ITEM -->
+        </div>
+        <!-- /WIDGET SIDEBAR -->
+      <% } %>
+      
+      <% if(locals.userData) { %>
+				<!-- TAMER SIDEBAR -->
+				<div class="layout-sidebar2 layout-item gutter-medium">
+          <!-- WIDGET SIDEBAR -->
+          <%- include("../partials/tamer/sidebar/tamer") %>
+          <%- include("../partials/tamer/sidebar/my_team") %>
+					<!-- /WIDGET SIDEBAR -->
+				</div>
+				<!-- /TAMER SIDEBAR -->
+      <% } %>
+        
+      <!-- WIDGET SIDEBAR -->
+      <div class="widget-sidebar">
+        <!-- SECTION TITLE WRAP -->
+        <div class="section-title-wrap cyan">
+          <h2 class="section-title medium widget-sidebar-title"><img src="https://ik.imagekit.io/projectvoyage/Interface/ui_events_anmzaY7xY.png"> Current Events</h2>
+          <div class="section-title-separator"></div>
+        </div>
+        <!-- /SECTION TITLE WRAP -->
+
+        <!-- POST PREVIEW SHOWCASE -->
+        <div class="widget-sidebar-body">
+          <div class="post-preview-showcase grid-1col gutter-small">
+          <!-- POST PREVIEW -->
+          <div class="post-preview tiny e-sport" style="height: 7rem;">
+            <!-- POST PREVIEW IMG WRAP -->
+            <a>
+              <div class="post-preview-img-wrap">
+                <!-- POST PREVIEW IMG -->
+                <figure class="post-preview-img liquid imgLiquid_bgSize imgLiquid_ready" style="background-image: url('https://cdn.glitch.global/f7f568cf-be3c-4b93-81f8-b9ec4596a310/39.jpg?v=1663868356831'); background-size: cover; background-position: center center; background-repeat: no-repeat;">
+                  <img src="https://i.pinimg.com/222x/83/e0/16/83e01664d031937de35d9fabdd980c3f.jpg" alt="post-36" style="display: none;">
+                </figure>
+                <!-- /POST PREVIEW IMG -->
+              </div>
+            </a>
+            <!-- /POST PREVIEW IMG WRAP -->
+      
+            <!-- POST PREVIEW TITLE -->
+            <a class="post-preview-title">A Welcoming Calugift!</a>
+            <!-- POST AUTHOR INFO -->
+            <div class="post-author-info-wrap">
+              <p class="post-author-info small light">Celebrate the grand release by joining us in the game every day and claim exciting rewards!</p>
+              <p class="post-author-info small light">By <a class="post-author">YGGDRASIL</a><span class="separator">|</span>07/25/2023</p>
+            </div>
+            <!-- /POST AUTHOR INFO -->
+          </div>
+          <!-- /POST PREVIEW -->
+        </div>
+        </div>
+        <!-- /POST PREVIEW SHOWCASE -->
+      </div>
+      <!-- /WIDGET SIDEBAR -->
+
+      <!-- WIDGET SIDEBAR -->
+      <div class="widget-sidebar">
+        <!-- SECTION TITLE WRAP -->
+        <div class="section-title-wrap red">
+          <h2 class="section-title medium widget-sidebar-title"><img src="https://ik.imagekit.io/projectvoyage/Interface/ui_topTamers_ZLy5jQJFy.png"> Wealthiest Tamers</h2>
+          <div class="section-title-separator"></div>
+        </div>
+        <!-- /SECTION TITLE WRAP -->
+        <div class="widget-sidebar-body widget-sidebar-body-centered">
+          <div class="table top-tamers no-color">
+            <!-- TABLE ROW HEADER -->
+            <div class="table-row-header">
+              <!-- TABLE ROW HEADER ITEM -->
+              <div class="table-row-header-item padded">
+                <p class="table-row-header-title" style="color: white;">Tamer</p>
+              </div>
+              <!-- /TABLE ROW HEADER ITEM -->
+
+              <!-- TABLE ROW HEADER ITEM -->
+              <div class="table-row-header-item padded">
+                <p class="table-row-header-title" style="color: white;">BITS</p>
+              </div>
+              <!-- /TABLE ROW HEADER ITEM -->
+
+            </div>
+            <!-- /TABLE ROW HEADER -->
+
+            <!-- TABLE ROWS -->
+            <div class="table-rows">
+              
+              <% for(let i=0; i< top.tamers.length; i++) { %>
+                <% if(top.tamers[i].costume) { %>
+                
+                <!-- TABLE ROW -->
+                <div class="table-row">
+                  <!-- TABLE ROW ITEM -->
+                  <div class="table-row-item">
+                    <!-- TEAM INFO WRAP -->
+                    <div class="top-tamer-wrap">
+                      <!-- USER AVATAR -->
+                      <div id="topTamer<%- top.tamers[i].id%>">
+                        <img src="<%- top.tamers[i].costume.costumeUrl %>">
+                      </div>
+                      <!-- /USER AVATAR -->
+
+                      <!-- TEAM INFO -->
+                      <p class="table-text bold" style="margin-left: 8px; color: white; text-transform: inherit;"><%- top.tamers[i].username %></p>
+                      <!-- /TEAM INFO -->
+                    </div>
+                    <!-- /TEAM INFO WRAP -->
+                  </div>
+                  <!-- /TABLE ROW ITEM -->
+
+                  <!-- TABLE ROW ITEM -->
+                  <div class="table-row-item">
+                    <p class="table-text bold" style="color: white;"><%= new Intl.NumberFormat('de-DE').format(top.tamers[i].modules.BITS) %></p>
+                  </div>
+                  <!-- /TABLE ROW ITEM -->
+                </div>
+                <!-- /TABLE ROW -->
+                  
+                <% } %>
+              <% } %>
+              
+            </div>
+            <!-- /TABLE ROWS -->
+          </div>
+        </div>
+      </div>
+      <!-- /WIDGET SIDEBAR -->
+        
+      <!-- WIDGET SIDEBAR -->
+      <div class="widget-sidebar">
+        <!-- SECTION TITLE WRAP -->
+        <div class="section-title-wrap violet">
+          <h2 class="section-title medium widget-sidebar-title"><img src="https://ik.imagekit.io/projectvoyage/Interface/ui_digimonRank_150c7qjnY.png"> Top Digimons</h2>
+          <div class="section-title-separator"></div>
+        </div>
+        <!-- /SECTION TITLE WRAP -->
+        <div class="widget-sidebar-body widget-sidebar-body-centered">
+          <div class="table top-tamers no-color">
+            <!-- TABLE ROW HEADER -->
+            <div class="table-row-header">
+              <!-- TABLE ROW HEADER ITEM -->
+              <div class="table-row-header-item padded">
+                <p class="table-row-header-title" style="color: white;">Level</p>
+              </div>
+              <!-- /TABLE ROW HEADER ITEM -->
+
+              <!-- TABLE ROW HEADER ITEM -->
+              <div class="table-row-header-item padded">
+                <p class="table-row-header-title" style="color: white;">Exp</p>
+              </div>
+              <!-- /TABLE ROW HEADER ITEM -->
+              
+              <!-- TABLE ROW HEADER ITEM -->
+              <div class="table-row-header-item padded">
+                <p class="table-row-header-title" style="color: white;">Power</p>
+              </div>
+              <!-- /TABLE ROW HEADER ITEM -->
+              
+              <!-- TABLE ROW HEADER ITEM -->
+              <div class="table-row-header-item padded">
+                <p class="table-row-header-title" style="color: white;">Owner</p>
+              </div>
+              <!-- /TABLE ROW HEADER ITEM -->
+
+            </div>
+            <!-- /TABLE ROW HEADER -->
+
+            <!-- TABLE ROWS -->
+            <div class="table-rows">
+              
+              <% for(let i=0; i< top.digimons.length; i++) { %>
+                <% if(top.digimons[i]) { %>
+                
+                <!-- TABLE ROW -->
+                <div class="table-row">
+                  <!-- TABLE ROW ITEM -->
+                  <div class="table-row-item">
+                    <!-- TEAM INFO WRAP -->
+                    <div class="top-tamer-wrap">
+                      <!-- USER AVATAR -->
+                      <div id="topDigimon<%- top.digimons[i].id %>" style="width: 80px; height: 80px; display: grid; justify-content: center; align-content: center;">
+                        <img style="max-width: 90%; max-height: 90%;" src="<%- top.digimons[i].sprite %>">
+                      </div>
+                      <!-- /USER AVATAR -->
+
+                      <!-- TEAM INFO -->
+                      <p class="table-text bold" style="margin-left: 8px; color: white; text-transform: inherit;"><%- top.digimons[i].level %></p>
+                      <!-- /TEAM INFO -->
+                    </div>
+                    <!-- /TEAM INFO WRAP -->
+                  </div>
+                  <!-- /TABLE ROW ITEM -->
+
+                  <!-- TABLE ROW ITEM -->
+                  <div class="table-row-item">
+                    <p class="table-text bold" style="color: white;"><%- new Intl.NumberFormat('de-DE').format(top.digimons[i].xp) %></p>
+                  </div>
+                  <!-- /TABLE ROW ITEM -->
+                  
+                  <div class="table-row-item">
+                    <p class="table-text bold" style="color: white;"><%- top.digimons[i].power || "???" %></p>
+                  </div>
+                  <!-- /TABLE ROW ITEM -->
+                  
+                  <!-- TABLE ROW ITEM -->
+                  <div class="table-row-item">
+                    <p class="table-text bold" style="color: white;"><%- top.digimons[i].owner.username %></p>
+                  </div>
+                  <!-- /TABLE ROW ITEM -->
+                </div>
+                <!-- /TABLE ROW -->
+                  
+                <% } %>
+              <% } %>
+              
+            </div>
+            <!-- /TABLE ROWS -->
+          </div>
+        </div>
+      </div>
+      <!-- /WIDGET SIDEBAR -->
+        
+      <!-- WIDGET SIDEBAR -->
+      <div class="widget-sidebar">
+        <!-- SECTION TITLE WRAP -->
+        <div class="section-title-wrap green">
+          <h2 class="section-title medium widget-sidebar-title"><img src="https://ik.imagekit.io/projectvoyage/Interface/ui_dTerminal_gWmJ87Bok.png">Newest Species Discovered</h2>
+          <div class="section-title-separator"></div>
+        </div>
+        <!-- /SECTION TITLE WRAP -->
+        
+        <div class="widget-sidebar-body">
+          <div class="grid3-1col" style="display: flex; text-align: center; justify-content: center;">
+            <div style="border-radius: 8px; background-image: url(https://ik.imagekit.io/projectvoyage/Interface/Backgrounds/image_2022-10-29_103036523_eYRsIqe2t.png); background-size: cover; width: 328px; height: 178px; display: flex; align-items: center;">
+              <div style="width: 100%; height: auto;">
+                <img src="<%- latestDigimon.sprite %>" style="max-height: 100px; max-width: 100px;">
+              </div>
+            </div>
+          </div>
+
+          <h3 style="text-align: center; margin-top: 16px;"><%- latestDigimon.species %></h3>
+          <p style="text-align: center;"><%- latestDigimon.form %></p>
+        </div>
+        
+      </div>
+      <!-- /WIDGET SIDEBAR -->
+    </div>
+    <!-- /LAYOUT SIDEBAR 2 -->
+  </div>
+  <!-- LAYOUT CONTENT FULL -->
+
+  <%- include("../partials/footer") %>
+
+<!-- app bundle -->
+<script src="app.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+<%- include("../functions/main") %>
+  
+  <script>
+    <% top.digimons.forEach(digimon => { %>
+      XM_Tooltip({
+        container: '#topDigimon<%- digimon.id %>',
+        type: 'html',
+        direction: 'left',
+        align: 'center',
+        animation: {
+          type: 'translate-out-fade'
+        },
+        htmlContent: `
+          <div style="display: flex; justify-content: center;">
+            <img style="width: fit-content; max-width: 142px; max-height: 142px;" src="<%- digimon.sprite %>">
+          </div>
+                  
+          <div class="TT-evolution">
+              <div class="section-title-wrap blue" style="margin-bottom: 16px; text-align: center;">
+                <h2 class="section-title small"><%- digimon.nickname || digimon.species %></h2>
+                <p><%- digimon.species %></p>
+                <div class="section-title-separator"></div>
+              </div>
+                    
+              <div style="text-align: center;">
+                <h4>Level: <p style="display: inline;"> <%- digimon.level%></p><h4>
+              </div>
+                    
+              <div class="party-modal-stats">
+                <p><b>Health:</b> <%- digimon.stats.health + digimon.stats.additional.health %> <b>Mana:</b> <%- digimon.stats.mana + digimon.stats.additional.mana %></p>
+                <p><b>Attack:</b> <%- digimon.stats.attack + digimon.stats.additional.attack %> <b>Defense:</b> <%- digimon.stats.defense + digimon.stats.additional.defense %></p>
+                <p><b>Speed:</b> <%- digimon.stats.speed + digimon.stats.additional.speed %></p>
+              </div>
+                  `
+      })
+    <% }) %>
+      
+    <% top.tamers.forEach(tamer => { %>
+      XM_Tooltip({
+        container: '#topTamer<%- tamer.id %>',
+        type: 'html',
+        direction: 'left',
+        align: 'center',
+
+        animation: {
+          type: 'translate-out-fade'
+        },
+        htmlContent: `
+          <div style="display: flex; justify-content: center; margin-top: 8px;">
+            <div style="box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;border-radius: 8px; margin-bottom: 8px; height: 158px; width: 158px; background-image: url(<%- tamer.avatarUrl || tamer.costume?.avatarUrl || "" %>); background-position: center center; background-size: cover; background-repeat: no-repeat;">
+                <img style="position: relative;left: 1%; top: 72%" src=<%- (tamer.online) ? "https://ik.imagekit.io/projectvoyage/Interface/User/Online_UitqLI0vY.png?updatedAt=1682389284984" : "https://ik.imagekit.io/projectvoyage/Interface/User/Offline_-4d-_w72d.png?updatedAt=1682283085360" %> >
+                <img style="height: 58px; position: relative; top: 62%; right: -57%;" src="<%- tamer.costume?.costumeUrl || "https://ik.imagekit.io/projectvoyage/Avatars/no_avatar_FN9kIV-JZ.png?updatedAt=1666195502480" %>">
+            </div>
+          </div>
+                  
+          <div class="TT-evolution">
+              <div class="section-title-wrap blue" style="margin-bottom: 16px; text-align: center;">
+                <h2 class="section-title small"><%- tamer.username %></h2>
+                <p><%- (tamer.modules.VIP) ? "<p class='text-yellow'>Prestigious Tamer</p>" : "Novice Tamer"%></p>
+                <div class="section-title-separator"></div>
+              </div>
+              
+              <div style="display: flex; gap: 8px; justify-content: center;">
+                <p><b>Level:</b> <%- tamer.modules.level %></p> 
+                <p><b>Exp:</b> <%- tamer.modules.exp %>/<%- Math.floor(((528 * tamer.modules.level) * 1.228) / 1.5) %></p>
+              </div>
+          </div>
+        `
+      })
+    <% }) %>
+  </script>
+  
+<% if(locals.userData && userData.newAccount === 0) { %>
+  <script>
+    Swal.fire({
+    padding: "0px",
+    title: `<h2 class="section-title small">Create a new account</h2><div class="section-title-separator"></div>`,
+    customClass: {
+      title: "section-title-wrap blue"
+    },
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    showConfirmButton: false,
+    html: `
+        <div class="form-wrap">
+          <!-- FORM ROW -->
+          <div class="form-row">
+            <!-- FORM ITEM -->
+            <div class="form-item blue">
+              <label for="register_username_field" class="rl-label">Tell us your Username</label>
+              <input type="text" id="register_username_field" name="register_username_field" placeholder="This will be displayed as your in-game name" maxlength="16" minlength="4">
+              <label style="margin-top:14px; margin-bottom: -24px; display: none;" id="register_username_error" for="register_username_field" class="rl-label">This is an Easter Egg</label>
+            </div>
+            <!-- /FORM ITEM -->
+          </div>
+          <!-- /FORM ROW -->
+
+          <!-- FORM ACTIONS -->
+          <div class="form-actions full">
+            <!-- BUTTON -->
+            <button id="register_username_button" class="button blue">
+              Continue
+              <!-- BUTTON ORNAMENT -->
+              <span class="button-ornament">
+                <!-- ARROW ICON -->
+                <svg class="arrow-icon medium">
+                  <use xlink:href="#svg-arrow-medium"></use>
+                </svg>
+                <!-- /ARROW ICON -->
+
+                <!-- CROSS ICON -->
+                <svg class="cross-icon small">
+                  <use xlink:href="#svg-cross-small"></use>
+                </svg>
+                <!-- /CROSS ICON -->
+              </span>
+              <!-- /BUTTON ORNAMENT -->
+            </button>
+            <!-- /BUTTON -->
+          </div>
+          <!-- /FORM ACTIONS -->
+        </div>
+        <!-- /FORM WRAP -->
+  `
+  })
+    
+  var RUB = document.getElementById("register_username_button")
+  var RUF = document.getElementById("register_username_field")
+  var RUE = document.getElementById("register_username_error")
+  
+  RUB.addEventListener("click", () => {
+    RUB.classList.add("disabled")
+    var RUFV = RUF.value
+    
+    fetch('/api/register/username', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',         
+        },      
+        body: JSON.stringify({ username: RUFV })
+    }).then((response) => response = response.json()).then((body) => {
+      if(!body.success) {
+        RUE.innerHTML = body.error
+        RUE.style.color = "#f30a5c"
+        RUE.style.display = "block"
+        RUB.classList.remove("disabled")
+        
+        if(body.error === "Sending you back to the tutorial.") window.location = "/me"
+      } else {
+        RUE.innerHTML = "Great! Joining \"File Island\"..."
+        RUE.style.color = "#58d819"
+        RUE.style.display = "block"
+        
+        window.location = "/me"
+      }
+    })
+  });
+  </script>
+<% } %>
+
+</body>
+</html>

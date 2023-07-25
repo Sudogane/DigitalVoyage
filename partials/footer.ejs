@@ -1,0 +1,807 @@
+  <!-- FOOTER TOP WRAP -->
+  <div class="footer-top-wrap">
+    <!-- FOOTER TOP -->
+    <div class="footer-top grid-limit">
+      <!-- FOOTER TOP BRAND -->
+      <div style="padding-top: 10px; padding-bottom: 10px;" class="footer-top-brand">
+        <!-- LOGO -->
+        <div class="logo negative">
+          <!-- LOGO IMG -->
+          <figure class="logo-img">
+            <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/bf9c096b-f76f-4f5f-b11b-6978229000e5/ddybbai-ec5b9f82-2557-4096-afc2-636922b490f4.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2JmOWMwOTZiLWY3NmYtNGY1Zi1iMTFiLTY5NzgyMjkwMDBlNVwvZGR5YmJhaS1lYzViOWY4Mi0yNTU3LTQwOTYtYWZjMi02MzY5MjJiNDkwZjQuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.8BvozrU6hEZz6KkpPBcKKpCZkqmmBWKzq4d4HoQxR9I" alt="Logo">
+          </figure>
+          <!-- /LOGO IMG -->
+
+          <!-- LOGO TEXT -->
+          <div class="logo-text">
+            <h2 class="logo-title">Project<span class="highlight"> Voyage</span></h2>
+            <p class="logo-info">Version: Prototype 0.1.02.10.22</p>
+          </div>
+          <!-- /LOGO TEXT -->
+        </div>
+        <!-- /LOGO -->
+
+        <div style="padding: 40px 0 40px; display: flex; flex-flow: column; text-align-last: justify;"> 
+          <h2> Current Time</h2>
+          <p class="logo-info" id="TIMER">Current Time</p>
+        </div>
+        
+        <script>
+          var timeDisplay = document.getElementById("TIMER");
+
+
+          function refreshTime() {
+            var dateString = new Date().toLocaleString("en-US", {timeZone: "America/Sao_Paulo"});
+            var formattedString = dateString.replace(", ", " - ");
+            timeDisplay.innerHTML = formattedString;
+          }
+
+          setInterval(refreshTime, 1000);
+        </script>
+        
+      </div>
+      <!-- /FOOTER TOP BRAND -->
+
+      <%# 
+      <!-- LINE SEPARATOR -->
+      <div class="line-separator negative"></div>
+      
+      <!-- FOOTER TOP WIDGETS -->
+      <div class="footer-top-widgets grid-4col centered gutter-big">
+        <!-- FOOTER TOP WIDGET -->
+        <div class="footer-top-widget">
+          <!-- SECTION TITLE WRAP -->
+          <div class="section-title-wrap blue negative">
+            <h2 class="section-title">Quick Menu</h2>
+            <div class="section-title-separator"></div>
+          </div>
+          <!-- /SECTION TITLE WRAP -->
+
+          <!-- LINK SECTION -->
+          <div class="link-section">
+            <!-- LINK LIST -->
+            <ul class="link-list small v2 negative">
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="index.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Home
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="home-v2.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Home V2
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="home-v3.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Home V3
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="news-v1.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  News V1
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="news-v2.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  News V2
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="news-v3.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  News V3
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="news-v4.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  News V4
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="post-v1.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Post Page V1
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="post-v2.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Post Page V2
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+            </ul>
+            <!-- /LINK LIST -->
+
+            <!-- LINK LIST -->
+            <ul class="link-list small v2 negative">
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="post-v3.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Post Page V3
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="post-v4.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Post Page V4
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="forum.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Forums
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="shop-v1-grid.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Shop Page V1
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="shop-v2.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Shop Page V2
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="product-page.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Shop Product
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="esports-streamers.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Streamers
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="esports-home.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  eSports
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+
+              <!-- LINK LIST ITEM -->
+              <li class="link-list-item">
+                <a href="esports-widgets-v1.html">
+                  <!-- ARROW ICON -->
+                  <svg class="arrow-icon medium">
+                    <use xlink:href="#svg-arrow-medium"></use>
+                  </svg>
+                  <!-- /ARROW ICON -->
+                  Widgets
+                </a>
+              </li>
+              <!-- /LINK LIST ITEM -->
+            </ul>
+            <!-- /LINK LIST -->
+          </div>
+          <!-- /LINK SECTION -->
+        </div>
+        <!-- FOOTER TOP WIDGET -->
+
+        <!-- FOOTER TOP WIDGET -->
+        <div class="footer-top-widget">
+          <!-- SECTION TITLE WRAP -->
+          <div class="section-title-wrap violet negative">
+            <h2 class="section-title">Black Market</h2>
+            <div class="section-title-separator"></div>
+          </div>
+          <!-- /SECTION TITLE WRAP -->
+
+          <!-- PRODUCT PREVIEW SHOWCASE -->
+          <div class="product-preview-showcase grid-1col gutter-small">
+            <!-- PRODUCT PREVIEW -->
+            <div class="product-preview tiny negative">
+              <!-- PRODUCT PREVIEW IMG WRAP -->
+              <div class="product-preview-img-wrap">
+                <!-- PRODUCT PREVIEW IMG -->
+                <a href="product-page.html">
+                  <figure class="product-preview-img liquid">
+                    <img src="img/products/01.jpg" alt="product-01">
+                  </figure>
+                </a>
+                <!-- /PRODUCT PREVIEW IMG -->
+              </div>
+              <!-- /PRODUCT PREVIEW IMG WRAP -->
+      
+              <!-- PRODUCT PREVIEW TITLE -->
+              <a href="product-page.html" class="product-preview-title">New Funtendo 3XSD - Black</a>
+              <!-- PRODUCT PREVIEW INFO -->
+              <div class="product-preview-info">
+                <!-- PRODUCT PREVIEW CATEGORY -->
+                <a href="shop-v1-grid.html" class="product-preview-category">Funtendo</a>
+                <!-- RATING ORNAMENT -->
+                <div class="rating-ornament small void yellow">
+                  <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                  <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon empty">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                </div>
+                <!-- /RATING ORNAMENT -->
+              </div>
+              <!-- /PRODUCT PREVIEW INFO -->
+      
+              <!-- PRODUCT PRICE WRAP -->
+              <div class="product-price-wrap">
+                <p class="product-preview-price current"><span class="currency">$</span>199.00</p>
+              </div>
+              <!-- /PRODUCT PRICE WRAP -->
+            </div>
+            <!-- /PRODUCT PREVIEW -->
+      
+            <!-- PRODUCT PREVIEW -->
+            <div class="product-preview tiny negative">
+              <!-- PRODUCT PREVIEW IMG WRAP -->
+              <div class="product-preview-img-wrap">
+                <!-- PRODUCT PREVIEW IMG -->
+                <a href="product-page.html">
+                  <figure class="product-preview-img liquid">
+                    <img src="img/products/04.jpg" alt="product-04">
+                  </figure>
+                </a>
+                <!-- /PRODUCT PREVIEW IMG -->
+              </div>
+              <!-- /PRODUCT PREVIEW IMG WRAP -->
+      
+              <!-- PRODUCT PREVIEW TITLE -->
+              <a href="product-page.html" class="product-preview-title">Mee U - kawai 8 bundle</a>
+              <!-- PRODUCT PREVIEW INFO -->
+              <div class="product-preview-info">
+                <!-- PRODUCT PREVIEW CATEGORY -->
+                <a href="shop-v1-grid.html" class="product-preview-category">Funtendo</a>
+                <!-- RATING ORNAMENT -->
+                <div class="rating-ornament small void yellow">
+                  <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                  <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon empty">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon empty">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                </div>
+                <!-- /RATING ORNAMENT -->
+              </div>
+              <!-- /PRODUCT PREVIEW INFO -->
+      
+              <!-- PRODUCT PRICE WRAP -->
+              <div class="product-price-wrap">
+                <p class="product-preview-price before"><span class="currency">$</span>310.00</p>
+                <p class="product-preview-price current"><span class="currency">$</span>280.00</p>
+              </div>
+              <!-- /PRODUCT PRICE WRAP -->
+            </div>
+            <!-- /PRODUCT PREVIEW -->
+
+            <!-- PRODUCT PREVIEW -->
+            <div class="product-preview tiny negative">
+              <!-- PRODUCT PREVIEW IMG WRAP -->
+              <div class="product-preview-img-wrap">
+                <!-- PRODUCT PREVIEW IMG -->
+                <a href="product-page.html">
+                  <figure class="product-preview-img liquid">
+                    <img src="img/products/06.jpg" alt="product-06">
+                  </figure>
+                </a>
+                <!-- /PRODUCT PREVIEW IMG -->
+              </div>
+              <!-- /PRODUCT PREVIEW IMG WRAP -->
+      
+              <!-- PRODUCT PREVIEW TITLE -->
+              <a href="product-page.html" class="product-preview-title">Crimson red joystick</a>
+              <!-- PRODUCT PREVIEW INFO -->
+              <div class="product-preview-info">
+                <!-- PRODUCT PREVIEW CATEGORY -->
+                <a href="shop-v1-grid.html" class="product-preview-category">Powerstation</a>
+                <!-- RATING ORNAMENT -->
+                <div class="rating-ornament small void yellow">
+                  <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                  <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                
+                    <!-- RATING ORNAMENT ITEM -->
+                  <div class="rating-ornament-item">
+                    <!-- RATING ORNAMENT ICON -->
+                    <svg class="rating-ornament-icon">
+                      <use xlink:href="#svg-star"></use>
+                    </svg>
+                  </div>
+                  <!-- /RATING ORNAMENT ITEM -->
+                </div>
+                <!-- /RATING ORNAMENT -->
+              </div>
+              <!-- /PRODUCT PREVIEW INFO -->
+      
+              <!-- PRODUCT PRICE WRAP -->
+              <div class="product-price-wrap">
+                <p class="product-preview-price current"><span class="currency">$</span>32.50</p>
+              </div>
+              <!-- /PRODUCT PRICE WRAP -->
+            </div>
+            <!-- /PRODUCT PREVIEW -->
+          </div>
+          <!-- /PRODUCT PREVIEW SHOWCASE -->
+        </div>
+        <!-- FOOTER TOP WIDGET -->
+
+        <!-- FOOTER TOP WIDGET -->
+        <div class="footer-top-widget">
+          <!-- SECTION TITLE WRAP -->
+          <div class="section-title-wrap blue negative">
+            <h2 class="section-title">Latest News</h2>
+            <div class="section-title-separator"></div>
+          </div>
+          <!-- /SECTION TITLE WRAP -->
+
+          <!-- POST PREVIEW SHOWCASE -->
+          <div class="post-preview-showcase grid-1col gutter-small">
+            <!-- POST PREVIEW -->
+            <div class="post-preview tiny negative gaming-news">
+              <!-- POST PREVIEW IMG WRAP -->
+              <a href="post-v1.html">
+                <div class="post-preview-img-wrap">
+                  <!-- POST PREVIEW IMG -->
+                  <figure class="post-preview-img liquid">
+                    <img src="img/posts/17.jpg" alt="post-17">
+                  </figure>
+                  <!-- /POST PREVIEW IMG -->
+                </div>
+              </a>
+              <!-- /POST PREVIEW IMG WRAP -->
+      
+              <!-- POST PREVIEW TITLE -->
+              <a href="post-v1.html" class="post-preview-title">Jazzstar announced that the GTE5 for PC is delayed</a>
+              <!-- POST AUTHOR INFO -->
+              <div class="post-author-info-wrap">
+                <p class="post-author-info small light">By <a href="search-results.html" class="post-author">Dexter</a><span class="separator">|</span>Dec 15th, 2018</p>
+              </div>
+              <!-- /POST AUTHOR INFO -->
+            </div>
+            <!-- /POST PREVIEW -->
+
+            <!-- POST PREVIEW -->
+            <div class="post-preview tiny negative geeky-news">
+              <!-- POST PREVIEW IMG WRAP -->
+              <a href="post-v4.html">
+                <div class="post-preview-img-wrap">
+                  <!-- POST PREVIEW IMG -->
+                  <figure class="post-preview-img liquid">
+                    <img src="img/posts/02.jpg" alt="post-02">
+                  </figure>
+                  <!-- /POST PREVIEW IMG -->
+                </div>
+              </a>
+              <!-- /POST PREVIEW IMG WRAP -->
+      
+              <!-- POST PREVIEW TITLE -->
+              <a href="post-v4.html" class="post-preview-title">Jessica Tam to star in the new "Charlotte" series</a>
+              <!-- POST AUTHOR INFO -->
+              <div class="post-author-info-wrap">
+                <p class="post-author-info small light">By <a href="search-results.html" class="post-author">Vellatrix</a><span class="separator">|</span>Dec 15th, 2018</p>
+              </div>
+              <!-- /POST AUTHOR INFO -->
+            </div>
+            <!-- /POST PREVIEW -->
+
+            <!-- POST PREVIEW -->
+            <div class="post-preview tiny negative gaming-news">
+              <!-- POST PREVIEW IMG WRAP -->
+              <a href="post-v1.html">
+                <div class="post-preview-img-wrap">
+                  <!-- POST PREVIEW IMG -->
+                  <figure class="post-preview-img liquid">
+                    <img src="img/posts/09.jpg" alt="post-09">
+                  </figure>
+                  <!-- /POST PREVIEW IMG -->
+                </div>
+              </a>
+              <!-- /POST PREVIEW IMG WRAP -->
+      
+              <!-- POST PREVIEW TITLE -->
+              <a href="post-v1.html" class="post-preview-title">New "Rizen" game is gonna be released in summer 2019</a>
+              <!-- POST AUTHOR INFO -->
+              <div class="post-author-info-wrap">
+                <p class="post-author-info small light">By <a href="search-results.html" class="post-author">Dexter</a><span class="separator">|</span>Dec 15th, 2018</p>
+              </div>
+              <!-- /POST AUTHOR INFO -->
+            </div>
+            <!-- /POST PREVIEW -->
+          </div>
+          <!-- POST PREVIEW SHOWCASE -->
+        </div>
+        <!-- FOOTER TOP WIDGET -->
+
+        <!-- FOOTER TOP WIDGET -->
+        <div class="footer-top-widget">
+          <!-- SECTION TITLE WRAP -->
+          <div class="section-title-wrap blue negative">
+            <h2 class="section-title">PLACEHOLDER</h2>
+            <div class="section-title-separator"></div>
+          </div>
+          <!-- /SECTION TITLE WRAP -->
+
+          <!-- POST PREVIEW SHOWCASE -->
+          <div class="post-preview-showcase grid-1col gutter-small">
+            <!-- POST PREVIEW -->
+            <div class="post-preview tiny negative gaming-news">
+              <!-- POST PREVIEW IMG WRAP -->
+              <a href="post-v1.html">
+                <div class="post-preview-img-wrap">
+                  <!-- POST PREVIEW IMG -->
+                  <figure class="post-preview-img liquid">
+                    <img src="img/posts/01.jpg" alt="post-01">
+                  </figure>
+                  <!-- /POST PREVIEW IMG -->
+                </div>
+              </a>
+              <!-- /POST PREVIEW IMG WRAP -->
+      
+              <!-- POST PREVIEW TITLE -->
+              <a href="post-v1.html" class="post-preview-title">The Clash of Dragons is breaking record sales in USA and Japan</a>
+              <!-- POST AUTHOR INFO -->
+              <div class="post-author-info-wrap">
+                <p class="post-author-info small light">By <a href="search-results.html" class="post-author">Dexter</a><span class="separator">|</span>Dec 15th, 2018</p>
+              </div>
+              <!-- /POST AUTHOR INFO -->
+            </div>
+            <!-- /POST PREVIEW -->
+
+            <!-- POST PREVIEW -->
+            <div class="post-preview tiny negative game-review">
+              <!-- POST PREVIEW IMG WRAP -->
+              <a href="post-v2.html">
+                <div class="post-preview-img-wrap">
+                  <!-- POST PREVIEW IMG -->
+                  <figure class="post-preview-img liquid">
+                    <img src="img/posts/25.jpg" alt="post-25">
+                  </figure>
+                  <!-- /POST PREVIEW IMG -->
+
+                  <!-- REVIEW RATING -->
+                  <div class="review-rating">
+                    <div id="footer-rate-4" class="arc tiny"></div>
+                  </div>
+                  <!-- /REVIEW RATING -->
+                </div>
+              </a>
+              <!-- /POST PREVIEW IMG WRAP -->
+
+              <!-- POST PREVIEW TITLE -->
+              <a href="post-v2.html" class="post-preview-title">"Legend of Kenshii II" is a bit green for now</a>
+              <!-- POST AUTHOR INFO -->
+              <div class="post-author-info-wrap">
+                <p class="post-author-info small light">By <a href="search-results.html" class="post-author">Vellatrix</a><span class="separator">|</span>Dec 15th, 2018</p>
+              </div>
+              <!-- /POST AUTHOR INFO -->
+            </div>
+            <!-- /POST PREVIEW -->
+
+            <!-- POST PREVIEW -->
+            <div class="post-preview tiny negative movie-news">
+              <!-- POST PREVIEW IMG WRAP -->
+              <a href="post-v3.html">
+                <div class="post-preview-img-wrap">
+                  <!-- POST PREVIEW IMG -->
+                  <figure class="post-preview-img liquid">
+                    <img src="img/posts/12.jpg" alt="post-12">
+                  </figure>
+                  <!-- /POST PREVIEW IMG -->
+        
+                  <!-- RATING ORNAMENT -->
+                  <div class="rating-ornament">
+                    <!-- RATING ORNAMENT ITEM -->
+                    <div class="rating-ornament-item">
+                      <!-- RATING ORNAMENT ICON -->
+                      <svg class="rating-ornament-icon">
+                        <use xlink:href="#svg-star"></use>
+                      </svg>
+                    </div>
+                    <!-- /RATING ORNAMENT ITEM -->
+                  
+                    <!-- RATING ORNAMENT ITEM -->
+                    <div class="rating-ornament-item">
+                      <!-- RATING ORNAMENT ICON -->
+                      <svg class="rating-ornament-icon">
+                        <use xlink:href="#svg-star"></use>
+                      </svg>
+                    </div>
+                    <!-- /RATING ORNAMENT ITEM -->
+                  
+                      <!-- RATING ORNAMENT ITEM -->
+                    <div class="rating-ornament-item">
+                      <!-- RATING ORNAMENT ICON -->
+                      <svg class="rating-ornament-icon">
+                        <use xlink:href="#svg-star"></use>
+                      </svg>
+                    </div>
+                    <!-- /RATING ORNAMENT ITEM -->
+                  
+                      <!-- RATING ORNAMENT ITEM -->
+                    <div class="rating-ornament-item">
+                      <!-- RATING ORNAMENT ICON -->
+                      <svg class="rating-ornament-icon empty">
+                        <use xlink:href="#svg-star"></use>
+                      </svg>
+                    </div>
+                    <!-- /RATING ORNAMENT ITEM -->
+                  
+                      <!-- RATING ORNAMENT ITEM -->
+                    <div class="rating-ornament-item">
+                      <!-- RATING ORNAMENT ICON -->
+                      <svg class="rating-ornament-icon empty">
+                        <use xlink:href="#svg-star"></use>
+                      </svg>
+                    </div>
+                    <!-- /RATING ORNAMENT ITEM -->
+                  </div>
+                  <!-- /RATING ORNAMENT -->
+                </div>
+              </a>
+              <!-- /POST PREVIEW IMG WRAP -->
+        
+              <!-- POST PREVIEW TITLE -->
+              <a href="post-v3.html" class="post-preview-title">We reviewed the "Guardians of the Universe" movie</a>
+              <!-- POST AUTHOR INFO -->
+              <div class="post-author-info-wrap">
+                <p class="post-author-info small light">By <a href="search-results.html" class="post-author">Faye V.</a><span class="separator">|</span>Dec 15th, 2018</p>
+              </div>
+              <!-- /POST AUTHOR INFO -->
+            </div>
+            <!-- /POST PREVIEW -->
+          </div>
+          <!-- /POST PREVIEW SHOWCASE -->
+        </div>
+        <!-- FOOTER TOP WIDGET -->
+      </div>
+      <!-- /FOOTER TOP WIDGETS -->
+      %>
+      
+    </div>
+    <!-- /FOOTER TOP -->
+  </div>
+  <!-- /FOOTER TOP WRAP -->
+
+  <!-- FOOTER BOTTOM WRAP -->
+  <div class="footer-bottom-wrap">
+    <!-- FOOTER BOTTOM -->
+    <div class="footer-bottom grid-limit">
+      <p class="footer-bottom-text"><span class="brand"><span class="highlighted">Project Voyage</span> Beta</span><span class="separator">|</span>All Rights Reserved 2022</p>
+      <p class="footer-bottom-text"><a href="#">Terms and Conditions</a><span class="separator">|</span><a href="#">Privacy Policy</a></p>
+    </div>
+    <!-- /FOOTER BOTTOM -->
+  </div>
+  <!-- /FOOTER BOTTOM WRAP -->

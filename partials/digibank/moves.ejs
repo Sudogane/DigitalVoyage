@@ -1,0 +1,32 @@
+            <div class="table">
+                      <!-- TABLE ROW HEADER -->
+                      <div class="table-row-header big bordered">
+                        <!-- TABLE ROW HEADER ITEM -->
+                        <div class="table-row-header-item padded-big">
+                          <p class="table-row-header-title" style="color: white;">Moves</p>
+                        </div>
+                        <!-- /TABLE ROW HEADER ITEM -->
+                      </div>
+                      <!-- /TABLE ROW HEADER -->
+              
+                      <div class="table-rows">
+                        <!-- TABLE ROW -->
+                        <div class="table-row big" style="display: table-cell; padding: 1rem; gap: 2rem;">
+                          <div class="column" style="display: inline-grid; gap: 1rem; width: 100%;">
+                            <% digimonData.moves.forEach(move => { %>
+                            <% if(!move) return %>
+                            <div class="ui-icon-wrap">
+                              <span class="ui-icon ui-icon-element-<%- move.element.toLowerCase() %>"></span>
+                              <h4 style="text-transform: inherit; width: 100%;">
+                                <%- move.name %>
+                                <p style="font-weight: 300;">Tackle an enemy in 1 zone</p>
+                                <p style="font-weight: 300;">MP Cost: <%- move.mpCost %> - Effect: <%- move.effect%><span style="float: right;">Inherited Skill</span></p>
+                              </h4>
+                            </div>
+                            <% }) %>
+                          </div>
+                        </div>
+                        <!-- /TABLE ROW -->
+                              
+                      </div>
+                    </div>
